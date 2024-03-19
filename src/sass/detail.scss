@@ -1,0 +1,376 @@
+// ===================== BREADCRUMB ===================
+.breadcrumb {
+  background-color: #f9f1e7;
+  font-size: 16px;
+  line-height: 24px;
+  padding: 22px 0;
+
+  &-list {
+    // padding: 0;
+    list-style: none;
+    display: flex;
+  }
+
+  &-link {
+    text-decoration: none;
+    color: #9f9f9f;
+    position: relative;
+    margin-right: 52px;
+
+    &::after {
+      content: ">";
+      position: absolute;
+      display: inline-block;
+      color: #000;
+      font-size: 28px;
+      margin-left: 16px;
+    }
+  }
+
+  &-product {
+    text-decoration: none;
+    color: #000;
+    padding-left: 34px;
+    border-left: 2px solid #9f9f9f;
+  }
+}
+
+// ===================== PRODUCT - DETAIL ===================
+.product-detail {
+  margin-top: 35px;
+  border-bottom: 1px solid #d9d9d9;
+  overflow: hidden;
+
+  &__wrapper {
+    display: flex;
+    gap: 105px;
+  }
+
+  &__left {
+    display: flex;
+    gap: 31px;
+  }
+
+  &-list__images {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+    align-self: flex-start;
+  }
+  &__image {
+    display: flex;
+
+    background-color: #f9f1e7;
+    width: 76px;
+    height: 80px;
+    border-radius: 10px;
+    overflow: hidden;
+    cursor: pointer;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  &-main__images {
+    background-color: #f9f1e7;
+    border-radius: 10px;
+    max-width: 432px;
+    height: 500px;
+    display: flex;
+    align-items: center;
+    border-radius: 10px;
+    overflow: hidden;
+
+    img {
+      width: 100%;
+      object-fit: cover;
+    }
+  }
+
+  // Product -Right
+  &__right {
+  }
+
+  &__heading {
+    font-size: 42px;
+    font-weight: 400;
+    margin: 0;
+    line-height: 63px;
+  }
+
+  &__price {
+    display: block;
+    font-size: 24px;
+    font-weight: 500;
+    color: #9f9f9f;
+  }
+
+  &__feedback {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+  }
+
+  &__star {
+    display: flex;
+    gap: 7px;
+
+    i {
+      font-size: 18px;
+      color: #ffc700;
+    }
+  }
+
+  &__people {
+    font-size: 13px;
+    padding: 8px;
+
+    color: #9f9f9f;
+    padding-left: 22px;
+    border-left: 2px solid #9f9f9f;
+  }
+
+  &__description {
+    max-width: 424px;
+    font-size: 13px;
+    line-height: 19.5px;
+  }
+
+  &__size {
+    margin: 22px 0;
+
+    span {
+      display: block;
+      font-size: 14px;
+      color: #9f9f9f;
+      margin-bottom: 12px;
+    }
+  }
+
+  &__size-button {
+    display: flex;
+    gap: 16px;
+    font-size: 13px;
+
+    button {
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: none;
+    }
+  }
+
+  &__size-button--different {
+    color: inherit;
+    background-color: #f9f1e7;
+  }
+
+  &__size-button--different:hover {
+    color: inherit;
+    background-color: #b88e2f;
+  }
+
+  &__color {
+    margin-bottom: 32px;
+
+    span {
+      display: block;
+      font-size: 14px;
+      color: #9f9f9f;
+      margin-bottom: 12px;
+    }
+
+    &-button {
+      display: flex;
+      gap: 16px;
+
+      button {
+        padding: 14px;
+        border-radius: 50%;
+        border: none;
+      }
+
+      &--violet {
+        background-color: #816dfa;
+      }
+      &--black {
+        background-color: #000;
+      }
+      &--brown {
+        background-color: #b88e2f;
+      }
+    }
+  }
+
+  &__features {
+    display: flex;
+    gap: 18px;
+    padding-bottom: 60px;
+    border-bottom: 2px solid #d9d9d9;
+
+    button {
+      cursor: pointer;
+      border: none;
+      background-color: transparent;
+    }
+  }
+
+  &__count {
+    font-size: 16px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 120px;
+
+    button {
+      padding: 22px 13px;
+    }
+  }
+
+  &__add,
+  &__compare {
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
+    width: 215px;
+  }
+
+  &__parameter {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 40px;
+    margin-bottom: 55px;
+    font-size: 16px;
+    color: #9f9f9f;
+  }
+
+  &__param {
+    display: flex;
+  }
+  &__parameter-quantity {
+    margin-left: 12px;
+  }
+
+  &__title {
+    width: 90px;
+  }
+
+  &__network {
+    display: flex;
+    gap: 25px;
+    color: #000;
+    font-size: 20px;
+    margin-left: 12px;
+  }
+}
+
+.product-features {
+  border: 1px solid #9f9f9f;
+  border-radius: 1rem;
+}
+
+/* ================= DESCRIPTION ====================== */
+.description {
+  &-heading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 52px;
+    font-size: 24px;
+    margin-top: 48px;
+    margin-bottom: 37px;
+
+    h3 {
+      margin: 0;
+    }
+  }
+
+  &-category__current {
+    font-weight: 500;
+    color: #000;
+    line-height: 36px;
+  }
+  &-category-different {
+    font-weight: 400;
+    color: #9f9f9f;
+  }
+  &-category-different:hover {
+    font-weight: 400;
+    color: #000;
+  }
+  &-main {
+    display: flex;
+    flex-direction: column;
+    font-size: 16px;
+    line-height: 24px;
+    color: #9f9f9f;
+    max-width: 1026px;
+    padding-bottom: 36px;
+
+    margin: 0 auto;
+    gap: 30px;
+
+    p {
+      margin: 0;
+    }
+  }
+  &-images {
+    display: flex;
+    gap: 29px;
+    margin-bottom: 66px;
+  }
+
+  &-images__wrapper {
+    background-color: #f9f1e7;
+    border-radius: 10px;
+    width: 605px;
+    height: 348px;
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+  }
+}
+
+/* ================= REALTED PRODUCTS ====================== */
+.related-products {
+  border-top: 1px solid #9f9f9f;
+  padding-bottom: 92px;
+  border-bottom: 1px solid #9f9f9f;
+}
+.related-product {
+  &__heading {
+    font-weight: 500;
+    font-size: 36px;
+    text-align: center;
+    margin-top: 55px;
+    margin-bottom: 26px;
+  }
+
+  &__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 42px 32px;
+    margin-bottom: 44px;
+  }
+}
+
+.show-more {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.btn-related {
+  font-size: 16px;
+  color: #b88e2f;
+  font-weight: 600;
+  cursor: pointer;
+  padding: 13px 76px;
+  border: 1px solid #b88e2f;
+  background-color: transparent;
+}

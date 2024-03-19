@@ -1,0 +1,220 @@
+@use "mixin";
+
+// ==================== BANNER ================
+.banner {
+  position: relative;
+
+  &__img {
+    width: 100%;
+    object-fit: contain;
+  }
+  &__heading-checkout {
+    position: absolute;
+    top: 28%;
+    right: 42%;
+    font-size: 48px;
+    font-weight: 500;
+  }
+  &__sub--heading-checkout {
+    position: absolute;
+    top: 63%;
+    right: 45%;
+    font-weight: 500;
+  }
+}
+
+// ===================== BILL =====================
+.bill {
+  &-detail {
+    display: flex;
+    gap: 26px;
+    margin-top: 90px;
+  }
+
+  .title-form {
+    font-size: 36px;
+    margin-bottom: 42px;
+    margin-top: 0;
+  }
+}
+
+.info-user {
+  &__wrapper {
+    padding: 0 120px 0 60px;
+    margin-bottom: 110px;
+  }
+
+  &__form {
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+  }
+
+  &__group-2 {
+    display: grid;
+    grid-template-columns: repeat(2, 221px);
+    gap: 30px;
+  }
+
+  &__field {
+    display: flex;
+    gap: 22px;
+    flex-direction: column;
+
+    input,
+    select {
+      border-radius: 10px;
+      border: 1px solid #9f9f9f;
+      margin: 0;
+      padding: 15px;
+      outline: none;
+    }
+  }
+}
+
+.method-pay {
+  // background: #ebe2e2;
+  align-self: start;
+  width: 100%;
+  padding: 40px 38px;
+
+  .price-checkout {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid #9f9f9f;
+
+    .wrapper-info__checkout {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      p {
+        margin: 0;
+      }
+
+      .product-wrapper {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+
+        .product-name {
+          font-weight: 400;
+          color: #9f9f9f;
+          margin: 0;
+        }
+      }
+
+      .product-price {
+        font-weight: 300;
+      }
+
+      .total-price {
+        font-weight: 700;
+        font-size: 24px;
+        color: #b88e2f;
+      }
+    }
+
+    .heading-info__checkout {
+      font-size: 24px;
+      margin: 0;
+      font-weight: 500;
+    }
+  }
+
+  &__description {
+    margin-top: 26px;
+    .policy {
+      line-height: 24px;
+      font-weight: 300;
+
+      &-detail {
+        text-decoration: none;
+        font-weight: 600;
+        color: #000;
+      }
+    }
+  }
+  &__bank {
+    margin-bottom: 20px;
+  }
+  .bank-policy {
+    color: #9f9f9f;
+    font-weight: 300;
+    line-height: 24px;
+  }
+  &__more {
+    margin-bottom: 40px;
+  }
+
+  .place-order {
+    display: flex;
+    justify-content: center;
+    .btn-order {
+      @include mixin.button-1(13px, 87px);
+    }
+  }
+}
+
+// =============== CSS Input RADIO ===================
+/* The container */
+.container-label {
+  display: block;
+  position: relative;
+  padding-left: 35px;
+  margin-bottom: 12px;
+  cursor: pointer;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+/* Hide the browser's default radio button */
+.container-label input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+}
+
+/* Create a custom radio button */
+.checkmark {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 14px;
+  width: 14px;
+  background-color: transparent;
+  border: 1px solid #9f9f9f;
+  border-radius: 50%;
+}
+
+/* On mouse-over, add a grey background color */
+.container-label:hover input ~ .checkmark {
+  background-color: #ccc;
+}
+
+/* Create the indicator (the dot/circle - hidden when not checked) */
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+/* Show the indicator (dot/circle) when checked */
+.container-label input:checked ~ .checkmark:after {
+  display: block;
+}
+
+/* Style the indicator (dot/circle) */
+.container-label .checkmark:after {
+  // top: 9px;
+  // left: 9px;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  background: rgb(4, 4, 4);
+}

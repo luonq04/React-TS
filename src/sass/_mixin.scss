@@ -1,0 +1,32 @@
+@mixin grid($columns, $gap) {
+  display: grid;
+  grid-template-columns: repeat($columns, 1fr);
+  grid-gap: $gap;
+}
+
+@mixin button($padding-x, $padding-y) {
+  padding: $padding-x $padding-y;
+  font-weight: 600;
+  color: #b88e2f;
+  width: 100%;
+  border: none;
+  background-color: white;
+}
+
+@mixin button-1($padding-x, $padding-y) {
+  padding: $padding-x $padding-y;
+  border: 1px solid #000;
+  border-radius: 10px;
+  font-size: 20px;
+  line-height: 30px;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+@mixin heading() {
+  font-size: 40px;
+  font-weight: 500;
+  margin: 0;
+  padding: 0;
+  line-height: 60px;
+}

@@ -1,0 +1,137 @@
+@use "mixin";
+
+// ================= HEADER ===================
+
+// ==================== BANNER ================
+.banner {
+  position: relative;
+  // height: 500px;
+
+  &__wrapper {
+    // height: 500px;
+  }
+
+  &__img {
+    width: 100%;
+    object-fit: contain;
+  }
+  &__heading {
+    position: absolute;
+    top: 19%;
+    right: 40%;
+    font-size: 48px;
+    font-weight: 500;
+  }
+  &__sub--heading {
+    position: absolute;
+    top: 63%;
+    right: 46.3%;
+    font-weight: 500;
+  }
+}
+
+// ============== NEWS =================
+
+.section-heading {
+  padding: 44px 0px 12px 15px;
+  border-bottom: 1px solid #000;
+  margin-bottom: 58px;
+  &__title {
+    @include mixin.heading;
+  }
+
+  &__title--shop {
+    @include mixin.heading;
+    font-style: italic;
+    padding: 28px 12px 0px 0px;
+  }
+
+  &__title--blog {
+    @include mixin.heading;
+    font-style: italic;
+    padding: 20px 12px 25px 0px;
+  }
+}
+
+// =================== PRODUCT ======================
+.news {
+  .product-list {
+    @include mixin.grid(4, 32px);
+    padding-bottom: 86px;
+    border-bottom: 1px solid #898989;
+  }
+}
+
+// =================== SHOP ======================
+.shops {
+  @include mixin.grid(2, 30px);
+}
+
+// =================== BLOG ======================
+
+.post {
+  margin-bottom: 144px;
+
+  &-list {
+    display: flex;
+    width: 93%;
+    flex-direction: column;
+    gap: 65px;
+    padding-top: 8px;
+  }
+
+  &-item {
+    display: flex;
+    gap: 35px;
+    align-items: end;
+    justify-content: flex-end;
+  }
+
+  &-info {
+    border-bottom: 1px solid black;
+  }
+
+  &__link {
+    text-decoration: none;
+    font-size: 20px;
+    font-weight: 600;
+    line-height: 2.4rem;
+    color: #3a3a3a;
+    margin-bottom: 10px;
+  }
+
+  &__title {
+    margin: 0;
+
+    font-style: italic;
+  }
+
+  &__excerpt {
+    font-size: 16px;
+    color: #898989;
+    line-height: 24px;
+    // margin-bottom: 20px;
+    margin: 0 0 20px;
+    font-weight: 500;
+  }
+
+  &__detail {
+    text-align: right;
+    margin-bottom: 20px;
+
+    span i {
+      font-size: 20px;
+    }
+  }
+
+  &__about {
+    font-size: 20px;
+    font-weight: 300;
+    line-height: 24px;
+    color: #3a3a3a;
+  }
+}
+
+// ============================ SERVICE ============================
+
+// ================= FOOTER ====================
