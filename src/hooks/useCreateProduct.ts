@@ -1,4 +1,4 @@
-import { addProduct } from "@/api/products";
+import { addProduct } from "@/services/products";
 import { toast } from "@/components/ui/use-toast";
 import { useMutation, useQueryClient } from "react-query";
 
@@ -7,7 +7,12 @@ export function useCreateProduct() {
 
   const { mutate: createProduct, isLoading: isCreating } = useMutation({
     mutationFn: addProduct,
+
     onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: ["Products"],
+      });
+
       toast({
         // variant: "destructive",
         className: "bg-green-400 text-white",

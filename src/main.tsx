@@ -9,7 +9,7 @@ import "./sass/cart.scss";
 import "./sass/detail.scss";
 import "./sass/checkout.scss";
 
-import ProductContextProvider from "./context/ProductProvider.tsx";
+// import ProductContextProvider from "./context/ProductProvider.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "./components/ui/toaster.tsx";
 
@@ -23,11 +23,11 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    <ProductContextProvider>
-      <QueryClientProvider client={queryClient}>
-        <App />
-        <Toaster />
-      </QueryClientProvider>
-    </ProductContextProvider>
+    {/* <ProductContextProvider> */}
+    <QueryClientProvider client={queryClient}>
+      <App />
+      <Toaster />
+    </QueryClientProvider>
+    {/* </ProductContextProvider> */}
   </React.StrictMode>
 );

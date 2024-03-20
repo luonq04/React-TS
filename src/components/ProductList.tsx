@@ -1,32 +1,28 @@
-import { useContext, useEffect } from "react";
-import { IProduct, IProducts } from "../interface/product";
+import { IProduct } from "../interface/product";
 import ProductItem from "./ProductItem";
-import { ProductContext } from "../context/ProductProvider";
-import axios from "axios";
 
-const ProductList = () => {
-  const { products, dispatch } = useContext(ProductContext);
+import { useProductQuery } from "@/hooks/useProductQuery";
+import Loader from "./Loader";
 
-  const URL = "http://localhost:8080/api/products";
+type ProductListProps = {
+  sale?: boolean;
+};
 
-  useEffect(function () {
-    (async () => {
-      try {
-        const { data } = await axios.get(`${URL}`);
-        dispatch({ type: "SET_PRODUCTS", payload: data });
-      } catch (error) {
-        console.log(error);
-      }
-    })();
-  }, []);
+const ProductList = ({ sale }: ProductListProps) => {
+  const { data, isLoading } = useProductQuery();
+
+  const saleProducts = sale
+    ? data?.filter((product: IProduct) => product?.sale > 0)
+    : data;
+
+  if (isLoading) return <Loader />;
+
   return (
     <div className="section-body">
       <div className="product-list" data-aos="fade-right">
-        {/* Product Item (MAP) */}
-        {products.value.map((pro: IProduct) => (
+        {saleProducts?.map((pro: IProduct) => (
           <ProductItem product={pro} key={pro._id} />
         ))}
-        {/* <ProductItem /> */}
       </div>
     </div>
   );

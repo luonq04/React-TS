@@ -1,4 +1,4 @@
-import { editProduct } from "@/api/products";
+import { editProduct } from "@/services/products";
 import { IProduct } from "@/interface/product";
 import { useMutation, useQueryClient } from "react-query";
 

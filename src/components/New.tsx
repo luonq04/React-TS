@@ -1,4 +1,4 @@
-import ListNewProducts from "./ListNewProducts";
+import ProductList from "./ProductList";
 
 const New = () => {
   return (
@@ -7,7 +7,7 @@ const New = () => {
         <div className="section-heading">
           <h2 className="section-heading__title">New</h2>
         </div>
-        <ListNewProducts />
+        <ProductList sale={true} />
       </div>
     </section>
   );

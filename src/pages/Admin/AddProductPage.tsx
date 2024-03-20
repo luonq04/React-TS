@@ -16,11 +16,9 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { uploadFile, uploadFiles } from "@/utils/helpers";
-import { useContext } from "react";
-import { ProductContext } from "@/context/ProductProvider";
+import { formAddSchema } from "@/configs/formSchema";
+
 import { toast } from "@/components/ui/use-toast";
-import { useCreateProduct } from "@/features/Admin/useCreateProduct";
-import Loader from "@/components/Loader";
 
 const items = [
   {
@@ -49,66 +47,15 @@ const items = [
   },
 ] as const;
 
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  type: z.string().min(2, {
-    message: "Type must be at least 2 characters.",
-  }),
-  price: z.coerce.number().gte(10000, {
-    message: "Price must be at least 10000 VND.",
-  }),
-
-  image: z.any().refine((val) => val !== undefined, "File is required"),
-  // val.length > 0, "File is required")
-  // .refine(
-  //   (files) =>
-  //     Array.from(files).every(
-  //       (file) =>
-  //         file instanceof File && ACCEPTED_IMAGE_TYPES.includes(file.type)
-  //     ),
-  //   "Only these types are allowed .jpg, .jpeg, .png and .webp"
-  // ),
-  // .instanceof(File)
-  // .refine((val) => val.length > 0, "File is required")
-  // .refine(
-  //   (files) =>
-  //     Array.from(files).every((file) =>
-  //       ACCEPTED_IMAGE_TYPES.includes(file.type)
-  //     ),
-  //   "Only these types are allowed .jpg, .jpeg, .png and .webp"
-  // )
-  // .refine((val) => val.length !== 0, "File is required"),
-
-  listImages: z.any(),
-  tags: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-  description: z.string(),
-});
-
 export default function AddProductPage() {
-  const { addProduct } = useContext(ProductContext);
-
-  // const { createProduct, isCreating } = useCreateProduct();
-
-  // if (isCreating) return <Loader />;
-
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof formAddSchema>>({
+    resolver: zodResolver(formAddSchema),
     defaultValues: {
       name: "",
       type: "",
-      price: 0,
+      price: 12000,
+      sale: 0,
       tags: ["recents", "home"],
       description: "",
     },
@@ -116,11 +63,8 @@ export default function AddProductPage() {
 
   // 2. Define a submit handler.
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
+  async function onSubmit(values: z.infer<typeof formAddSchema>) {
     try {
-      // console.log(values);
-      // console.log(typeof values.image);
-      // console.log(typeof values.listImages);
       const url = values.image ? await uploadFile(values.image) : null;
       const urls = values.listImages
         ? await uploadFiles(values.listImages)
@@ -139,16 +83,11 @@ export default function AddProductPage() {
         "http://localhost:8080/api/products",
         newProduct
       );
-      // createProduct(newProduct);
-
-      addProduct(newProduct);
 
       toast({
-        // variant: "destructive",
         className: "bg-green-400 text-white",
         title: "Add product Success.",
         duration: 2000,
-        // description: "There was a problem with your request.",
       });
     } catch (error) {
       console.log(error);
@@ -198,6 +137,21 @@ export default function AddProductPage() {
                 <FormLabel>Price</FormLabel>
                 <FormControl>
                   <Input type="text" placeholder="price" {...field} />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="sale"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sale</FormLabel>
+                <FormControl>
+                  <Input type="text" placeholder="sale" {...field} />
                 </FormControl>
 
                 <FormMessage />

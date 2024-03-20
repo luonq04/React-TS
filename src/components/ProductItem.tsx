@@ -2,8 +2,8 @@ import { Link } from "react-router-dom";
 import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
 
-const ProductItem = ({ product = {} }: { product: IProduct }) => {
-  const { _id, name, price, type, image } = product;
+const ProductItem = ({ product }: { product: IProduct }) => {
+  const { name, image, price, type, _id } = product;
 
   return (
     <div className="product-item">

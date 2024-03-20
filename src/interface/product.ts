@@ -4,6 +4,7 @@ export interface IProducts {
   image: string;
   type?: string;
   price?: number;
+  sale?: number;
   listImages?: string;
   description?: string;
   tags?: string[];
@@ -14,11 +15,12 @@ export interface IProducts {
 }
 
 export interface IProduct {
-  _id: string;
+  _id?: string;
   name: string;
   image: string;
   type?: string;
   price?: number;
+  sale?: number;
   listImages?: string;
   description?: string;
   tags?: string[];

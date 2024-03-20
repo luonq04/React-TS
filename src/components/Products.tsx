@@ -1,6 +1,4 @@
-import { useContext } from "react";
 import ProductList from "./ProductList";
-import { ProductContext } from "../context/ProductProvider";
 
 const Products = () => {
   return (

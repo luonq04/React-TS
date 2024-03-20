@@ -1,6 +1,6 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { string, z } from "zod";
+import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -16,15 +16,15 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 import axios from "axios";
 import { uploadFile, uploadFiles } from "@/utils/helpers";
-import { useContext, useEffect, useState } from "react";
-import { ProductContext } from "@/context/ProductProvider";
+import { useEffect } from "react";
+
 import { toast } from "@/components/ui/use-toast";
 import { useParams } from "react-router-dom";
 import { useQuery } from "react-query";
 import Loader from "@/components/Loader";
 import { IProduct } from "@/interface/product";
-import { useEditProduct } from "@/features/Admin/useEditProduct";
-import InfoProduct from "@/components/InfoProduct";
+import { useEditProduct } from "@/hooks/useEditProduct";
+import { formEditSchema } from "@/configs/formSchema";
 
 const items = [
   {
@@ -53,52 +53,13 @@ const items = [
   },
 ] as const;
 
-const ACCEPTED_IMAGE_TYPES = [
-  "image/jpeg",
-  "image/jpg",
-  "image/png",
-  "image/webp",
-];
-
-const formSchema = z.object({
-  name: z.string().min(2, {
-    message: "Name must be at least 2 characters.",
-  }),
-  type: z.string().min(2, {
-    message: "Type must be at least 2 characters.",
-  }),
-  price: z.number().min(5, {
-    message: "Price must be at least 20000 VND.",
-  }),
-
-  image: z.any(),
-
-  listImages: z.any(),
-  tags: z.array(z.string()).refine((value) => value.some((item) => item), {
-    message: "You have to select at least one item.",
-  }),
-  description: z.string(),
-});
-
 export default function EditProductPage() {
-  const { editProduct } = useContext(ProductContext);
   const { id } = useParams();
-  const [isDisabled, setIsDisabled] = useState(false);
-
   const { updateProduct, isUpdating } = useEditProduct(id);
 
   // 1. Define your form.
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
-    // defaultValues: {
-    //   name: "",
-    //   type: "",
-    //   price: "",
-    //   tags: ["recents", "home"],
-    //   image: {},
-    //   description: "",
-    //   listImages: {},
-    // },
+  const form = useForm<z.infer<typeof formEditSchema>>({
+    resolver: zodResolver(formEditSchema),
   });
 
   const getProductEdit = async () => {
@@ -107,16 +68,23 @@ export default function EditProductPage() {
 
   const { isLoading, data } = useQuery(["productEdit", id], getProductEdit);
 
-  // console.log(data);
-
   useEffect(() => {
     if (!isLoading && data) {
-      const { _id, type, tags, name, price, image, description, listImages } =
-        data.data;
+      const {
+        type,
+        tags,
+        name,
+        price,
+        sale = 0,
+        image,
+        description,
+        listImages,
+      } = data.data;
       form.reset({
         name,
         type,
         price,
+        sale,
         tags,
         image,
         description,
@@ -127,14 +95,10 @@ export default function EditProductPage() {
 
   if (isLoading || isUpdating) return <Loader />;
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    try {
-      // if(values.listImages) {}
-      // const urls = values.listImages
-      //   ? await uploadFiles(values.listImages)
-      //   : "";
-      // const url = values.image ? await uploadFile(values.image) : "";
+  async function onSubmit(values: z.infer<typeof formEditSchema>) {
+    console.log(values);
 
+    try {
       const url =
         typeof values.image !== "string"
           ? await uploadFile(values.image)
@@ -152,25 +116,12 @@ export default function EditProductPage() {
         image: url,
       };
 
-      // console.log(newProduct);
-      setIsDisabled(true);
-
-      // const { data } = await axios.put(
-      //   `http://localhost:8080/api/products/${id}`,
-      //   newProduct
-      // );
       await updateProduct({ id, newProduct });
 
-      setIsDisabled(false);
-
-      editProduct(data);
-
       toast({
-        // variant: "destructive",
         className: "bg-green-400 text-white",
         title: "Edit product Success.",
         duration: 2000,
-        // description: "There was a problem with your request.",
       });
     } catch (error) {
       console.log(error);
@@ -190,7 +141,7 @@ export default function EditProductPage() {
                 <FormLabel>Name</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isDisabled}
+                    disabled={isUpdating}
                     placeholder="shadcn"
                     {...field}
                   />
@@ -208,7 +159,7 @@ export default function EditProductPage() {
               <FormItem>
                 <FormLabel>Type</FormLabel>
                 <FormControl>
-                  <Input disabled={isDisabled} placeholder="type" {...field} />
+                  <Input disabled={isUpdating} placeholder="type" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -224,9 +175,29 @@ export default function EditProductPage() {
                 <FormLabel>Price</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isDisabled}
+                    disabled={isUpdating}
                     type="number"
                     placeholder="price"
+                    {...field}
+                  />
+                </FormControl>
+
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="sale"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Sale</FormLabel>
+                <FormControl>
+                  <Input
+                    disabled={isUpdating}
+                    type="number"
+                    placeholder="sale"
                     {...field}
                   />
                 </FormControl>
@@ -244,7 +215,7 @@ export default function EditProductPage() {
                 <FormLabel>Image</FormLabel>
                 <FormControl>
                   <Input
-                    disabled={isDisabled}
+                    disabled={isUpdating}
                     {...fieldProps}
                     placeholder="Picture"
                     type="file"
@@ -331,7 +302,7 @@ export default function EditProductPage() {
                 <FormLabel>Bio</FormLabel>
                 <FormControl>
                   <Textarea
-                    disabled={isDisabled}
+                    disabled={isUpdating}
                     placeholder="Tell us a little bit about yourself"
                     className="resize-none"
                     {...field}
@@ -343,7 +314,7 @@ export default function EditProductPage() {
             )}
           />
 
-          <Button disabled={isDisabled} type="submit">
+          <Button disabled={isUpdating} type="submit">
             Submit
           </Button>
         </form>

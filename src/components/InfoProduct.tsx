@@ -2,9 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
 
-import { Button } from "@/components/ui/button";
-
-const InfoProduct = ({ product = {} }: { product: IProduct }) => {
+const InfoProduct = ({ product }: { product: IProduct }) => {
   const imgEl = useRef(null);
 
   const [count, setCount] = useState(1);
@@ -36,13 +34,14 @@ const InfoProduct = ({ product = {} }: { product: IProduct }) => {
     _id,
     name,
     price,
+    sale,
     customerReview,
     description,
     tags,
     type,
     listImages,
     image,
-  }: IProduct = product;
+  } = product;
 
   return (
     <div>
