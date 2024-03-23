@@ -34,16 +34,16 @@ const items = [
     label: "Applications",
   },
   {
-    id: "desktop",
-    label: "Desktop",
+    id: "desk",
+    label: "Desk",
   },
   {
-    id: "downloads",
-    label: "Downloads",
+    id: "chair",
+    label: "Chair",
   },
   {
-    id: "documents",
-    label: "Documents",
+    id: "sofa",
+    label: "Sofa",
   },
 ] as const;
 

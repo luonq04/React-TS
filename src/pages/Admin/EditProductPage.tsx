@@ -112,8 +112,8 @@ export default function EditProductPage() {
       const newProduct: IProduct = {
         ...values,
         price: +values.price,
-        listImages: urls,
         image: url,
+        listImages: urls,
       };
 
       await updateProduct({ id, newProduct });

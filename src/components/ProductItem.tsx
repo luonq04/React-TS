@@ -3,12 +3,22 @@ import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
 
 const ProductItem = ({ product }: { product: IProduct }) => {
-  const { name, image, price, type, _id } = product;
+  // console.log(product);
+
+  const { name, image, price, sale, type, _id } = product;
 
   return (
     <div className="product-item">
       <div className="product-image">
         <img src={image} alt="true" className="product__thumbnail" />
+
+        {sale > 0 && (
+          <div className="product__wrapper-sale product-item__sale-white">
+            <span className="absolute -translate-x-[10%] translate-y-[40%] top-[5%] right-[5%]">
+              -{sale}%
+            </span>
+          </div>
+        )}
       </div>
       <div className="product-info">
         <h3 className="product__name">
@@ -21,7 +31,9 @@ const ProductItem = ({ product }: { product: IProduct }) => {
         </Link>
         <div className="product-price">
           <span className="product-price__new">{formatCurrency(price!)}đ</span>
-          <span className="product-price__old">3.500.000đ</span>
+          <span className="product-price__old">
+            {formatCurrency(price! - price! * (sale! / 100))}đ
+          </span>
         </div>
       </div>
       <div className="product-item-content-extra">

@@ -1,6 +1,10 @@
 import React from "react";
 
-const DescriptionProduct = () => {
+const DescriptionProduct = ({
+  customerReview,
+}: {
+  customerReview: string[];
+}) => {
   return (
     <section className="description">
       <div className="container">
@@ -9,7 +13,9 @@ const DescriptionProduct = () => {
           <h3 className="description-category-different">
             Additional Information
           </h3>
-          <h3 className="description-category-different">Reviews [5]</h3>
+          <h3 className="description-category-different">
+            Reviews [{customerReview.length}]
+          </h3>
         </div>
         {/* Paragraph */}
         <div className="description-main">

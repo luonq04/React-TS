@@ -96,23 +96,14 @@ img {
     width: 100%;
   }
 
-  // &-list {
-  //   @include mixin.grid(4, 32px);
-  //   padding-bottom: 86px;
-  //   border-bottom: 1px solid #898989;
-  // }
-
-  &-item__sale {
+  &__wrapper-sale {
     position: absolute;
-    display: block;
     top: 5%;
     right: 5%;
-    color: #ffffff;
-
-    font-weight: 500;
-    padding: 14px 7px;
-    text-align: center;
+    width: 48px;
+    height: 48px;
     border-radius: 50%;
+    color: #ffffff;
   }
 
   &-item__sale-white {

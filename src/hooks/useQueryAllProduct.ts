@@ -4,7 +4,7 @@ import { useQuery } from "react-query";
 export function useQueryAllProduct() {
   const { data: allProducts, isLoading } = useQuery({
     queryKey: ["Products"],
-    queryFn: getAllProducts,
+    queryFn: async () => await getAllProducts(),
   });
 
   return { allProducts, isLoading };

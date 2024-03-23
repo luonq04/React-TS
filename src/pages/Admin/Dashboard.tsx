@@ -1,8 +1,13 @@
-import React from "react";
+import Loader from "@/components/Loader";
+import { useQueryAllProduct } from "@/hooks/useQueryAllProduct";
 
-type Props = {};
+const Dashboard = () => {
+  const { allProducts, isLoading } = useQueryAllProduct();
 
-const Dashboard = (props: Props) => {
+  if (isLoading) return <Loader />;
+
+  console.log(allProducts);
+
   return <div>Dashboard</div>;
 };
 

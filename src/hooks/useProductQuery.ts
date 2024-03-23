@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 
 export function useProductQuery(id?: number | string) {
   const { data, isLoading } = useQuery({
-    queryKey: id ? ["Products", "sale"] : ["Products"],
+    queryKey: id ? ["Products", id] : ["Products"],
     queryFn: async () => {
       return id
         ? await getProductById(id as number | string)
