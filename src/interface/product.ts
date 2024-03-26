@@ -2,10 +2,10 @@ export interface IProducts {
   _id?: string;
   name: string;
   image: string;
-  type?: string;
+  category?: string;
   price?: number;
   sale?: number;
-  listImages?: string;
+  gallery?: string;
   description?: string;
   tags?: string[];
   customerReview?: {
@@ -18,10 +18,10 @@ export interface IProduct {
   _id?: string;
   name: string;
   image: string;
-  type?: string;
+  category?: string;
   price?: number;
   sale?: number;
-  listImages?: string;
+  gallery?: string;
   description?: string;
   tags?: string[];
   customerReview?: {

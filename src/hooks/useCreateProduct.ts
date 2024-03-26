@@ -6,7 +6,14 @@ export function useCreateProduct() {
   const queryClient = useQueryClient();
 
   const { mutate: createProduct, isLoading: isCreating } = useMutation({
-    mutationFn: addProduct,
+    mutationFn: (product) => addProduct(product),
+
+    onError: (err) =>
+      toast({
+        className: "bg-red-400 text-white",
+        title: `Add fail: ${err.message}`,
+        duration: 2000,
+      }),
 
     onSuccess: () => {
       queryClient.invalidateQueries({
@@ -14,22 +21,11 @@ export function useCreateProduct() {
       });
 
       toast({
-        // variant: "destructive",
         className: "bg-green-400 text-white",
         title: "Add product Success.",
         duration: 2000,
-        // description: "There was a problem with your request.",
       });
     },
-
-    onError: (err) =>
-      toast({
-        // variant: "destructive",
-        className: "bg-green-400 text-white",
-        title: "Add fail",
-        duration: 2000,
-        // description: "There was a problem with your request.",
-      }),
   });
 
   return { createProduct, isCreating };

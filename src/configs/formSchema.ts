@@ -4,8 +4,8 @@ export const formAddSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  type: z.string().min(2, {
-    message: "Type must be at least 2 characters.",
+  category: z.string({
+    required_error: "Please select a category for product.",
   }),
   price: z.coerce.number().gte(10000, {
     message: "Price must be at least 10000 VND.",
@@ -16,7 +16,7 @@ export const formAddSchema = z.object({
 
   image: z.any().refine((val) => val !== undefined, "File is required"),
 
-  listImages: z.any(),
+  gallery: z.any(),
   tags: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),
@@ -27,8 +27,8 @@ export const formEditSchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
-  type: z.string().min(2, {
-    message: "Type must be at least 2 characters.",
+  category: z.string({
+    required_error: "Please select an email to display.",
   }),
   price: z.coerce.number().gte(10000, {
     message: "Price must be at least 10000 VND.",
@@ -39,7 +39,7 @@ export const formEditSchema = z.object({
 
   image: z.any(),
 
-  listImages: z.any(),
+  gallery: z.any(),
   tags: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),

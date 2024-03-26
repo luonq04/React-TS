@@ -26,14 +26,17 @@ export const getProductColumns = (
   },
   {
     accessorKey: "image",
-    header: () => <div className="text-left">Amount</div>,
+    header: () => <div className="text-left">Image</div>,
     cell: ({ row }) => (
-      <img className="w-15 h-12 object-cover" src={row.getValue("image")} />
+      <img className="w-20 h-12 object-cover" src={row.getValue("image")} />
     ),
   },
   {
-    accessorKey: "type",
-    header: "Type",
+    accessorKey: "category",
+    cell: ({ row }) => (
+      // console.log(row.getValue("category")),
+      <p>{row.getValue("category").name}</p>
+    ),
   },
   {
     accessorKey: "price",

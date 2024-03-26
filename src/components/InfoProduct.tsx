@@ -18,6 +18,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
 
   useEffect(function () {
     function callback(e) {
+      window.scrollTo(0, 0);
       if (!e.target.getAttribute("data-img")) return;
 
       if (e.target.src === null) return;
@@ -38,10 +39,12 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
     customerReview,
     description,
     tags,
-    type,
-    listImages,
+    category,
+    gallery,
     image,
   } = product;
+
+  console.log(product);
 
   return (
     <div>
@@ -50,7 +53,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
           <div className="product-detail__wrapper">
             <div className="product-detail__left">
               <div className="product-detail-list__images">
-                {listImages?.map((img, index) => (
+                {gallery?.map((img, index) => (
                   <div className="product-detail__image" key={index}>
                     <img src={img} alt="true" data-img />
                   </div>
@@ -74,7 +77,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
                   <i className="fa-solid fa-star-half" />
                 </div>
                 <p className="product-detail__people">
-                  {customerReview.length} Customer Review
+                  {customerReview!.length} Customer Review
                 </p>
               </div>
               <p className="product-detail__description">{description}</p>
@@ -128,7 +131,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
                   <span className="product-detail__title">Category</span>
                   <span>:</span>
                   <span className="product-detail__parameter-quantity">
-                    {type}
+                    {category!.name}
                   </span>
                 </div>
                 <div className="product-detail__param">

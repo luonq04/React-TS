@@ -1,18 +1,23 @@
 import instance from "@/configs/axios";
-import axios from "axios";
+import { IProduct } from "@/interface/product";
 
-const URL = "http://localhost:8080/api/products";
-
-export const deleteProduct = async (id) => {
-  await axios.delete(`${URL}/${id}`);
+export const deleteProduct = async (id: number | string) => {
+  return await instance.delete(`/products/${id}`);
 };
 
-export const addProduct = async (product) => {
-  await axios.post(`${URL}`, product);
+export const addProduct = async (product: IProduct) => {
+  try {
+    // return await instance.post(`/products`, product);
+    const { data } = await instance.post(`/products`, product);
+    console.log(data);
+  } catch (error) {
+    console.log(error);
+    throw error;
+  }
 };
 
-export const editProduct = async (id, product) => {
-  await axios.put(`${URL}/${id}`, product);
+export const editProduct = async (id: number | string, product: IProduct) => {
+  return await instance.put(`/products/${id}`, product);
 };
 
 // =================================================================

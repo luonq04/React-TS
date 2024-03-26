@@ -14,86 +14,104 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
+
 import { uploadFile, uploadFiles } from "@/utils/helpers";
 import { useEffect } from "react";
 
 import { toast } from "@/components/ui/use-toast";
 import { useParams } from "react-router-dom";
-import { useQuery } from "react-query";
+
 import Loader from "@/components/Loader";
 import { IProduct } from "@/interface/product";
 import { useEditProduct } from "@/hooks/useEditProduct";
 import { formEditSchema } from "@/configs/formSchema";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+
+import { ICategory } from "@/interface/category";
+import { useProductQuery } from "@/hooks/useProductQuery";
+import { useQueryCategory } from "@/hooks/useQueryCategory";
+
 const items = [
   {
-    id: "recents",
-    label: "Recents",
+    id: "shoes",
+    label: "Shoes",
   },
   {
-    id: "home",
-    label: "Home",
+    id: "style",
+    label: "Style",
   },
   {
-    id: "applications",
-    label: "Applications",
+    id: "trendy",
+    label: "Trendy",
   },
   {
-    id: "desk",
-    label: "Desk",
+    id: "limited",
+    label: "Limited",
   },
   {
-    id: "chair",
-    label: "Chair",
-  },
-  {
-    id: "sofa",
-    label: "Sofa",
+    id: "likenew",
+    label: "Like New",
   },
 ] as const;
 
 export default function EditProductPage() {
   const { id } = useParams();
   const { updateProduct, isUpdating } = useEditProduct(id);
+  const { category, isLoading: isLoadingCategory } = useQueryCategory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formEditSchema>>({
     resolver: zodResolver(formEditSchema),
   });
 
-  const getProductEdit = async () => {
-    return axios.get(`http://localhost:8080/api/products/${id}`);
-  };
+  const { data, isLoading } = useProductQuery(id);
 
-  const { isLoading, data } = useQuery(["productEdit", id], getProductEdit);
+  // if (isLoading) return <Loader />;
+  // console.log(data);
+
+  // const getProductEdit = async () => {
+  //   return axios.get(`http://localhost:8080/api/products/${id}`);
+  // };
+
+  // const { isLoading, data } = useQuery(["productEdit", id], getProductEdit);
 
   useEffect(() => {
     if (!isLoading && data) {
+      // const
       const {
-        type,
         tags,
         name,
+        category: { _id, name: categoryName },
+
         price,
         sale = 0,
         image,
         description,
-        listImages,
-      } = data.data;
+        gallery,
+      } = data;
       form.reset({
         name,
-        type,
+        category: categoryName,
         price,
         sale,
         tags,
         image,
         description,
-        listImages,
+        gallery,
       });
     }
   }, [isLoading, data, form]);
 
-  if (isLoading || isUpdating) return <Loader />;
+  if (isLoading || isUpdating || isLoadingCategory) return <Loader />;
+
+  // console.log(data);
 
   async function onSubmit(values: z.infer<typeof formEditSchema>) {
     console.log(values);
@@ -105,16 +123,23 @@ export default function EditProductPage() {
           : values.image;
 
       const urls =
-        typeof values.listImages?.[0] !== "string"
-          ? await uploadFiles(values.listImages)
-          : values.listImages;
+        typeof values.gallery?.[0] !== "string"
+          ? await uploadFiles(values.gallery)
+          : values.gallery;
+
+      const categoryNew = isNaN(parseInt(values.category[0]))
+        ? data.category._id
+        : values.category;
 
       const newProduct: IProduct = {
         ...values,
         price: +values.price,
+        category: categoryNew,
         image: url,
-        listImages: urls,
+        gallery: urls,
       };
+
+      console.log("newProduct", newProduct);
 
       await updateProduct({ id, newProduct });
 
@@ -127,6 +152,8 @@ export default function EditProductPage() {
       console.log(error);
     }
   }
+
+  // console.log(data);
 
   return (
     <>
@@ -154,14 +181,30 @@ export default function EditProductPage() {
 
           <FormField
             control={form.control}
-            name="type"
+            name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Input disabled={isUpdating} placeholder="type" {...field} />
-                </FormControl>
+                <FormLabel>Category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={data.category._id}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {/* <SelectItem value="1">asd</SelectItem>
+                    <SelectItem value="660025d6d62df2a8ea1fce34">lo</SelectItem> */}
 
+                    {category.map((cate: ICategory) => (
+                      <SelectItem value={cate._id!} key={cate._id}>
+                        {cate.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -233,7 +276,7 @@ export default function EditProductPage() {
 
           <FormField
             control={form.control}
-            name="listImages"
+            name="gallery"
             render={({ field: { value, onChange, ...fieldProps } }) => (
               <FormItem>
                 <FormLabel>List Image</FormLabel>

@@ -5,7 +5,7 @@ export function useDeleteProduct() {
   const queryClient = useQueryClient();
 
   const { mutate: delProduct, isLoading: isDeleting } = useMutation({
-    mutationFn: (id) => deleteProduct(id),
+    mutationFn: (id: string | number) => deleteProduct(id),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

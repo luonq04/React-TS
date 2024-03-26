@@ -20,30 +20,38 @@ import { formAddSchema } from "@/configs/formSchema";
 
 import { toast } from "@/components/ui/use-toast";
 
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useQueryCategory } from "@/hooks/useQueryCategory";
+import Loader from "@/components/Loader";
+import { ICategory } from "@/interface/category";
+import { useCreateProduct } from "@/hooks/useCreateProduct";
+
 const items = [
   {
-    id: "recents",
-    label: "Recents",
+    id: "shoes",
+    label: "Shoes",
   },
   {
-    id: "home",
-    label: "Home",
+    id: "style",
+    label: "Style",
   },
   {
-    id: "applications",
-    label: "Applications",
+    id: "trendy",
+    label: "Trendy",
   },
   {
-    id: "desk",
-    label: "Desk",
+    id: "limited",
+    label: "Limited",
   },
   {
-    id: "chair",
-    label: "Chair",
-  },
-  {
-    id: "sofa",
-    label: "Sofa",
+    id: "likenew",
+    label: "Like New",
   },
 ] as const;
 
@@ -53,46 +61,51 @@ export default function AddProductPage() {
     resolver: zodResolver(formAddSchema),
     defaultValues: {
       name: "",
-      type: "",
       price: 12000,
+      // category: "Nike", // "60f1b0b3b3b3f40015f1f3b3
       sale: 0,
-      tags: ["recents", "home"],
+      tags: ["shoes", "trendy"],
       description: "",
     },
   });
 
-  // 2. Define a submit handler.
+  const { createProduct, isCreating } = useCreateProduct();
+  const { category, isLoading } = useQueryCategory();
 
+  // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formAddSchema>) {
+    // console.log(values);
     try {
       const url = values.image ? await uploadFile(values.image) : null;
-      const urls = values.listImages
-        ? await uploadFiles(values.listImages)
-        : null;
+      const urls = values.gallery ? await uploadFiles(values.gallery) : null;
 
       const newProduct = {
         ...values,
         price: +values.price,
-        listImages: urls,
+        gallery: urls,
         image: url,
       };
 
-      console.log(newProduct);
+      // console.log(newProduct);
 
-      const { data } = await axios.post(
-        "http://localhost:8080/api/products",
-        newProduct
-      );
+      // const { data } = await axios.post(
+      //   "http://localhost:8080/api/products",
+      //   newProduct
+      // );
 
-      toast({
-        className: "bg-green-400 text-white",
-        title: "Add product Success.",
+      await createProduct(newProduct);
+    } catch (error) {
+      return toast({
+        className: "bg-red-400 text-white",
+        title: "Add product Fail.",
         duration: 2000,
       });
-    } catch (error) {
-      console.log(error);
     }
   }
+
+  if (isLoading || isCreating) return <Loader />;
+
+  // console.log(isCreating);
 
   return (
     <>
@@ -116,14 +129,27 @@ export default function AddProductPage() {
 
           <FormField
             control={form.control}
-            name="type"
+            name="category"
             render={({ field }) => (
               <FormItem>
-                <FormLabel>Type</FormLabel>
-                <FormControl>
-                  <Input placeholder="type" {...field} />
-                </FormControl>
-
+                <FormLabel>Category</FormLabel>
+                <Select
+                  onValueChange={field.onChange}
+                  defaultValue={field.value}
+                >
+                  <FormControl>
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select a category" />
+                    </SelectTrigger>
+                  </FormControl>
+                  <SelectContent>
+                    {category.map((cate: ICategory) => (
+                      <SelectItem value={cate._id!} key={cate._id}>
+                        {cate.name}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
                 <FormMessage />
               </FormItem>
             )}
@@ -184,7 +210,7 @@ export default function AddProductPage() {
 
           <FormField
             control={form.control}
-            name="listImages"
+            name="gallery"
             render={({ field: { value, onChange, ...fieldProps } }) => (
               <FormItem>
                 <FormLabel>List Images</FormLabel>
