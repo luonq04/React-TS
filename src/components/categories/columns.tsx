@@ -9,7 +9,7 @@ interface ProductColumnsProps {
   onDelete: (product) => void;
 }
 
-export const getProductColumns = (
+export const getCategoryColumns = (
   onDelete: ProductColumnsProps
 ): ColumnDef[Item] => [
   {
@@ -24,25 +24,7 @@ export const getProductColumns = (
     accessorKey: "name",
     header: "Name",
   },
-  {
-    accessorKey: "image",
-    header: () => <div className="text-left">Image</div>,
-    cell: ({ row }) => (
-      <img className="w-20 h-12 object-cover" src={row.getValue("image")} />
-    ),
-  },
-  // {
-  //   accessorKey: "category",
-  //   cell: ({ row }) => (
-  //     // console.log(row.getValue("category")),
-  //     <p>{row.getValue("category").name}</p>
-  //   ),
-  // },
-  {
-    accessorKey: "price",
-    header: "Price",
-    cell: ({ row }) => <span>{formatCurrency(row.getValue("price"))} đ</span>,
-  },
+
   {
     id: "actions",
     cell: ({ row }) => <DataTableRowAcions row={row} onDelete={onDelete} />,

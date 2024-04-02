@@ -52,8 +52,25 @@
   }
   &-title-1 {
     display: flex;
-    gap: 114px;
+    gap: 100px;
   }
+
+  &-title__product {
+    margin-left: 60px;
+  }
+
+  &-title__price {
+    margin-left: 20px;
+  }
+
+  &-title__subtotal {
+    margin-left: 35px;
+  }
+
+  &-title__quantity {
+    margin-left: 35px;
+  }
+
   &-title-2 {
     display: flex;
     gap: 36px;
@@ -76,6 +93,8 @@
     img {
       border-radius: 10px;
       object-fit: cover;
+      width: 105px;
+      object-fit: contain;
     }
   }
 
@@ -89,7 +108,7 @@
 
   &-total {
     display: flex;
-    gap: 56px;
+    gap: 45px;
     align-items: center;
 
     i {
@@ -173,6 +192,12 @@
   }
 
   &-price {
-    max-width: 98px;
+    display: block;
+    width: 98px;
+  }
+
+  &-subtotal {
+    display: block;
+    width: 94px;
   }
 }

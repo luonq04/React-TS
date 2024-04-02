@@ -1,10 +1,7 @@
-import React from "react";
-import CartItem from "./CartItem";
 import { Link } from "react-router-dom";
+import CartItem from "./CartItem";
 
-type Props = {};
-
-const Carts = (props: Props) => {
+const Carts = () => {
   return (
     <section className="cart">
       <div className="container">
@@ -13,12 +10,12 @@ const Carts = (props: Props) => {
             <div className="cart-heading">
               <div className="cart-heading__wrapper">
                 <div className="cart-title-1">
-                  <span>Product</span>
-                  <span>Price</span>
+                  <span className="cart-title__product">Product</span>
+                  <span className="cart-title__price">Price</span>
                 </div>
                 <div className="cart-title-2">
-                  <span>Quantity</span>
-                  <span>Subtotal</span>
+                  <span className="cart-title__price">Quantity</span>
+                  <span className="cart-title__subtotal">Subtotal</span>
                 </div>
               </div>
             </div>

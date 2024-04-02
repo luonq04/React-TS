@@ -14,7 +14,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
-import axios from "axios";
+
 import { uploadFile, uploadFiles } from "@/utils/helpers";
 import { formAddSchema } from "@/configs/formSchema";
 
@@ -27,7 +27,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { useQueryCategory } from "@/hooks/useQueryCategory";
+import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
 import Loader from "@/components/Loader";
 import { ICategory } from "@/interface/category";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
@@ -70,7 +70,7 @@ export default function AddProductPage() {
   });
 
   const { createProduct, isCreating } = useCreateProduct();
-  const { category, isLoading } = useQueryCategory();
+  const { category, isLoading } = useQueryAllCategory();
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formAddSchema>) {
@@ -85,13 +85,6 @@ export default function AddProductPage() {
         gallery: urls,
         image: url,
       };
-
-      // console.log(newProduct);
-
-      // const { data } = await axios.post(
-      //   "http://localhost:8080/api/products",
-      //   newProduct
-      // );
 
       await createProduct(newProduct);
     } catch (error) {

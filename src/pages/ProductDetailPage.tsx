@@ -9,6 +9,7 @@ import { useProductQuery } from "@/hooks/useProductQuery";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
+  window.scrollTo(0, 0);
 
   const { data, isLoading } = useProductQuery(id);
 

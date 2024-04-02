@@ -11,7 +11,7 @@ const ProductsPage = () => {
   const queryClient = useQueryClient();
 
   const { mutate: delProduct, isLoading: isDeleting } = useMutation({
-    mutationFn: (id) => deleteProduct(id),
+    mutationFn: (id) => deleteProduct(id!),
 
     onSuccess: () => {
       queryClient.invalidateQueries({

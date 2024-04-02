@@ -1,10 +1,10 @@
-import { getAllCategory } from "@/services/category";
+import { getCategoryById } from "@/services/category";
 import { useQuery } from "react-query";
 
-export function useQueryCategory() {
+export function useQueryCategory(id: string) {
   const { data: category, isLoading } = useQuery({
-    queryKey: ["Category"],
-    queryFn: async () => await getAllCategory(),
+    queryKey: ["Category", id],
+    queryFn: async () => getCategoryById(id),
   });
 
   return { category, isLoading };

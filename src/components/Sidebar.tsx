@@ -4,6 +4,7 @@ import {
   ChevronRight,
   File,
   LayoutDashboard,
+  LayoutPanelLeft,
   Settings,
   ShoppingCart,
   User,
@@ -44,6 +45,12 @@ const Sidebar = () => {
             title: "Products",
             href: "/dashboard/products",
             icon: File,
+            variant: "ghost",
+          },
+          {
+            title: "Category",
+            href: "/dashboard/categories",
+            icon: LayoutPanelLeft,
             variant: "ghost",
           },
           {

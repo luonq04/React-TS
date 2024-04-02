@@ -17,6 +17,8 @@ const ProductList = ({ sale }: ProductListProps) => {
 
   if (isLoading) return <Loader />;
 
+  console.log(data);
+
   return (
     <div className="section-body">
       <div className="product-list" data-aos="fade-right">

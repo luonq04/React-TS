@@ -18,7 +18,6 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
 
   useEffect(function () {
     function callback(e) {
-      window.scrollTo(0, 0);
       if (!e.target.getAttribute("data-img")) return;
 
       if (e.target.src === null) return;

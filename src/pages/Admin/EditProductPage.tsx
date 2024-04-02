@@ -36,7 +36,7 @@ import {
 
 import { ICategory } from "@/interface/category";
 import { useProductQuery } from "@/hooks/useProductQuery";
-import { useQueryCategory } from "@/hooks/useQueryCategory";
+import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
 
 const items = [
   {
@@ -64,7 +64,7 @@ const items = [
 export default function EditProductPage() {
   const { id } = useParams();
   const { updateProduct, isUpdating } = useEditProduct(id);
-  const { category, isLoading: isLoadingCategory } = useQueryCategory();
+  const { category, isLoading: isLoadingCategory } = useQueryAllCategory();
 
   // 1. Define your form.
   const form = useForm<z.infer<typeof formEditSchema>>({

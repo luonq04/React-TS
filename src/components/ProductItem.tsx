@@ -1,11 +1,18 @@
 import { Link } from "react-router-dom";
 import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
+import useAddToCart from "@/hooks/useAddToCart";
+import { useLocalStorage } from "@/hooks/useStorage";
+import Loader from "./Loader";
 
 const ProductItem = ({ product }: { product: IProduct }) => {
-  // console.log(product);
-
   const { name, image, price, sale, type, _id } = product;
+
+  const [user] = useLocalStorage("user", {});
+
+  const { addToCart, isAdding } = useAddToCart(user);
+
+  if (isAdding) return <Loader />;
 
   return (
     <div className="product-item">
@@ -40,7 +47,12 @@ const ProductItem = ({ product }: { product: IProduct }) => {
         <Link to={`/detail/${_id}`}>
           <button className="product-btn">View product</button>
         </Link>
-        <button className="product-btn">Add to cart</button>
+        <button
+          className="product-btn"
+          onClick={() => addToCart({ product: _id!, quantity: 1 })}
+        >
+          Add to cart
+        </button>
         <ul className="product-list__feature">
           <li className="product-item__feature">
             <i className="fa-solid fa-share-nodes" />

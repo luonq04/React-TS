@@ -24,6 +24,7 @@ export const editProduct = async (id: number | string, product: IProduct) => {
 
 export const getAllProducts = async () => {
   try {
+    // const { data } = await instance.get("/products?_page=1&_limit=6");
     const { data } = await instance.get("/products");
     return data;
   } catch (error) {

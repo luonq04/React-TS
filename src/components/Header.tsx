@@ -1,8 +1,6 @@
 import { Link } from "react-router-dom";
 
 const Header = () => {
-
-
   return (
     <header className="header">
       <div className="container">
@@ -24,7 +22,7 @@ const Header = () => {
               </li>
               <li className="main-menu__item">
                 <Link to="" className="main-menu__link">
-                  About
+                  Category
                 </Link>
               </li>
               <li className="main-menu__item">
@@ -35,7 +33,9 @@ const Header = () => {
             </ul>
           </nav>
           <div className="header-items">
-            <img src="/mdi_account-alert-outline.svg" alt="true" />
+            <Link to="/signin">
+              <img src="/mdi_account-alert-outline.svg" alt="true" />
+            </Link>
             <img src="/akar-icons_search.svg" alt="true" />
             <img src="/akar-icons_heart.svg" alt="true" />
             <Link to="cart">

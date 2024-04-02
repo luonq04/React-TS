@@ -13,6 +13,11 @@ import SettingPage from "./pages/Admin/SettingPage";
 import AddProductPage from "./pages/Admin/AddProductPage";
 import EditProductPage from "./pages/Admin/EditProductPage";
 import CheckoutPage from "./pages/CheckoutPage";
+import Signup from "./pages/Signup";
+import Signin from "./pages/Signin";
+import CategoryPage from "./pages/Admin/CategoryPage";
+import EditCategoryPage from "./pages/Admin/EditCategoryPage";
+import AddCategoryPage from "./pages/Admin/AddCategoryPage";
 
 function App() {
   return (
@@ -24,6 +29,8 @@ function App() {
           <Route path="detail/:id" element={<ProductDetailPage />} />
           <Route path="cart" element={<CartPage />} />
           <Route path="checkout" element={<CheckoutPage />} />
+          <Route path="signup" element={<Signup />} />
+          <Route path="signin" element={<Signin />} />
         </Route>
 
         <Route path="dashboard" element={<AppLayoutAdmin />}>
@@ -31,6 +38,9 @@ function App() {
           <Route path="products" element={<ProductsPage />} />
           <Route path="products/add" element={<AddProductPage />} />
           <Route path="products/edit/:id" element={<EditProductPage />} />
+          <Route path="categories" element={<CategoryPage />} />
+          <Route path="categories/add" element={<AddCategoryPage />} />
+          <Route path="categories/edit/:id" element={<EditCategoryPage />} />
           <Route path="orders" element={<OrderPage />} />
           <Route path="users" element={<UserPage />} />
           <Route path="settings" element={<SettingPage />} />
