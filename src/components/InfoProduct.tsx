@@ -1,10 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
+import instance from "@/configs/axios";
+import { toast } from "./ui/use-toast";
+
+type SizeType = { color: string }[];
 
 const InfoProduct = ({ product }: { product: IProduct }) => {
   const imgEl = useRef(null);
-
+  const [size, setSize] = useState<SizeType>([]);
+  const [detail, setDetail] = useState([]);
   const [count, setCount] = useState(1);
 
   function increaseCount() {
@@ -34,7 +39,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
     _id,
     name,
     price,
-    sale,
+    attributes,
     customerReview,
     description,
     tags,
@@ -43,7 +48,34 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
     image,
   } = product;
 
-  console.log(product);
+  async function getValue(e) {
+    const { data } = await instance.get(`attributes/${e.target.value}`);
+    setSize(data.values);
+  }
+
+  function getValueDetail(e) {
+    const valueProduct = size.find((item) => item._id === e.target.value);
+    setDetail(valueProduct);
+  }
+
+  function handleSubmit() {
+    if (size.length === 0)
+      return toast({
+        className: "bg-red-400 text-white",
+        title: "Please choose size",
+        duration: 2000,
+      });
+
+    if (detail.length === 0)
+      return toast({
+        className: "bg-red-400 text-white",
+        title: "Please choose color",
+        duration: 2000,
+      });
+  }
+
+  console.log(attributes);
+  console.log(size);
 
   return (
     <div>
@@ -65,7 +97,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
             <div className="product-detail__right">
               <h1 className="product-detail__heading">{name}</h1>
               <span className="product-detail__price">
-                {formatCurrency(price!)}đ
+                {formatCurrency(detail.price! ? detail.price! : price)}đ
               </span>
               <div className="product-detail__feedback">
                 <div className="product-detail__star">
@@ -83,23 +115,33 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
               <div className="product-detail__size">
                 <span>Size</span>
                 <div className="product-detail__size-button">
-                  <button className="product-detail__size-button--different">
-                    L
-                  </button>
-                  <button className="product-detail__size-button--different">
-                    XL
-                  </button>
-                  <button className="product-detail__size-button--different">
-                    XS
-                  </button>
+                  {attributes?.map((attr, index) => (
+                    <button
+                      value={attr._id}
+                      className="product-detail__size-button--different"
+                      key={index}
+                      onClick={getValue}
+                    >
+                      {attr.name}
+                    </button>
+                  ))}
                 </div>
               </div>
               <div className="product-detail__color">
                 <span>Color</span>
                 <div className="product-detail__color-button">
-                  <button className="product-detail__color-button--violet" />
-                  <button className="product-detail__color-button--black" />
-                  <button className="product-detail__color-button--brown" />
+                  {size.map((color, index) => (
+                    <button
+                      value={color._id}
+                      key={color._id}
+                      style={{
+                        backgroundColor: color.color,
+                        border:
+                          color._id === detail._id ? "2px solid #6d6464" : "",
+                      }}
+                      onClick={getValueDetail}
+                    />
+                  ))}
                 </div>
               </div>
               <div className="product-detail__features">
@@ -109,8 +151,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
                   <button onClick={increaseCount}>+</button>
                 </div>
                 <div className="product-features product-detail__add">
-                  <button>Add To Cart</button>
-                  {/* <Button>Button</Button> */}
+                  <button onClick={handleSubmit}>Add To Cart</button>
                 </div>
                 <div className="product-features product-detail__compare">
                   <button>+ Compare</button>

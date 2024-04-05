@@ -18,6 +18,9 @@ import Signin from "./pages/Signin";
 import CategoryPage from "./pages/Admin/CategoryPage";
 import EditCategoryPage from "./pages/Admin/EditCategoryPage";
 import AddCategoryPage from "./pages/Admin/AddCategoryPage";
+import AttributePage from "./pages/Admin/AttributePage";
+import AddAttributepage from "./pages/Admin/AddAttributePage";
+import EditAttributePage from "./pages/Admin/EditAttributePage";
 
 function App() {
   return (
@@ -41,6 +44,9 @@ function App() {
           <Route path="categories" element={<CategoryPage />} />
           <Route path="categories/add" element={<AddCategoryPage />} />
           <Route path="categories/edit/:id" element={<EditCategoryPage />} />
+          <Route path="attributes" element={<AttributePage />} />
+          <Route path="attributes/add" element={<AddAttributepage />} />
+          <Route path="attributes/edit/:id" element={<EditAttributePage />} />
           <Route path="orders" element={<OrderPage />} />
           <Route path="users" element={<UserPage />} />
           <Route path="settings" element={<SettingPage />} />

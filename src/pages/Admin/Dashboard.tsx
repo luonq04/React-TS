@@ -1,14 +1,7 @@
-import Loader from "@/components/Loader";
-import { useQueryAllProduct } from "@/hooks/useQueryAllProduct";
+import Userpage from "./UserPage";
 
 const Dashboard = () => {
-  const { allProducts, isLoading } = useQueryAllProduct();
-
-  if (isLoading) return <Loader />;
-
-  console.log(allProducts);
-
-  return <div>Dashboard</div>;
+  return <Userpage />;
 };
 
 export default Dashboard;

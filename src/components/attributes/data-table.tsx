@@ -31,8 +31,6 @@ export function DataTable<TData, TValue>({
     pageSize: 5, //default page size
   });
 
-  console.log("data", data);
-
   const table = useReactTable({
     data,
     columns,
@@ -45,7 +43,7 @@ export function DataTable<TData, TValue>({
     },
   });
 
-  // console.log("DATA", data);
+  console.log("DATA", data);
 
   return (
     <div>

@@ -3,6 +3,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import {
   Form,
   FormControl,
@@ -11,26 +12,23 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+
 import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Textarea } from "@/components/ui/textarea";
 
-import { uploadFile, uploadFiles } from "@/utils/helpers";
 import { formAddSchema } from "@/configs/formSchema";
+import { uploadFile, uploadFiles } from "@/utils/helpers";
 
 import { toast } from "@/components/ui/use-toast";
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
+import FormFieldInput from "@/components/FormField";
 import Loader from "@/components/Loader";
-import { ICategory } from "@/interface/category";
+import SelectField from "@/components/SelectField";
+import { useCreateAttriVal } from "@/hooks/useCreateAttriVal";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
+
+import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
+import instance from "@/configs/axios";
 
 const items = [
   {
@@ -71,20 +69,39 @@ export default function AddProductPage() {
 
   const { createProduct, isCreating } = useCreateProduct();
   const { category, isLoading } = useQueryAllCategory();
+  const { createAttriVal } = useCreateAttriVal();
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formAddSchema>) {
-    // console.log(values);
+    console.log(values);
     try {
       const url = values.image ? await uploadFile(values.image) : null;
       const urls = values.gallery ? await uploadFiles(values.gallery) : null;
 
+      const { data } = await instance.post("/attributes", {
+        name: values.nameAttr,
+      });
+
       const newProduct = {
-        ...values,
+        name: values.name,
         price: +values.price,
+        sale: +values.sale,
+        category: values.category,
+        tags: values.tags,
+        description: values.description,
         gallery: urls,
         image: url,
+        attributes: data._id,
       };
+
+      const newAttriVal = {
+        attributeId: data._id,
+        name: values.nameAttr,
+        price: +values.priceAttr,
+        quantity: +values.quantityAttr,
+        color: values.color,
+      };
+      await createAttriVal(newAttriVal);
 
       await createProduct(newProduct);
     } catch (error) {
@@ -98,8 +115,6 @@ export default function AddProductPage() {
 
   if (isLoading || isCreating) return <Loader />;
 
-  // console.log(isCreating);
-
   return (
     <>
       <h2 className="mb-5 text-2xl font-medium text-center">Add Product</h2>
@@ -109,14 +124,9 @@ export default function AddProductPage() {
             control={form.control}
             name="name"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Name</FormLabel>
-                <FormControl>
-                  <Input placeholder="shadcn" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
+              <FormFieldInput label="Name">
+                <Input placeholder="Name product" {...field} />
+              </FormFieldInput>
             )}
           />
 
@@ -124,27 +134,12 @@ export default function AddProductPage() {
             control={form.control}
             name="category"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Category</FormLabel>
-                <Select
-                  onValueChange={field.onChange}
-                  defaultValue={field.value}
-                >
-                  <FormControl>
-                    <SelectTrigger>
-                      <SelectValue placeholder="Select a category" />
-                    </SelectTrigger>
-                  </FormControl>
-                  <SelectContent>
-                    {category.map((cate: ICategory) => (
-                      <SelectItem value={cate._id!} key={cate._id}>
-                        {cate.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-                <FormMessage />
-              </FormItem>
+              <SelectField
+                label="Category"
+                options={category}
+                value={field.value}
+                onChange={field.onChange}
+              />
             )}
           />
 
@@ -152,14 +147,14 @@ export default function AddProductPage() {
             control={form.control}
             name="price"
             render={({ field }) => (
-              <FormItem>
-                <FormLabel>Price</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="price" {...field} />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
+              <FormFieldInput label="Price">
+                <Input
+                  type="number"
+                  placeholder="Price"
+                  {...field}
+                  onChange={(e) => field.onChange(e.target.value)}
+                />
+              </FormFieldInput>
             )}
           />
 
@@ -182,22 +177,17 @@ export default function AddProductPage() {
             control={form.control}
             name="image"
             render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem>
-                <FormLabel>Image</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldProps}
-                    placeholder="Picture"
-                    type="file"
-                    accept="image/*, application/pdf"
-                    onChange={(event) =>
-                      onChange(event.target.files && event.target.files[0])
-                    }
-                  />
-                </FormControl>
-
-                <FormMessage />
-              </FormItem>
+              <FormFieldInput label="Image">
+                <Input
+                  {...fieldProps}
+                  placeholder="Picture"
+                  type="file"
+                  accept="image/*, application/pdf"
+                  onChange={(event) =>
+                    onChange(event.target.files && event.target.files[0])
+                  }
+                />
+              </FormFieldInput>
             )}
           />
 
@@ -219,9 +209,48 @@ export default function AddProductPage() {
                     }
                   />
                 </FormControl>
-
                 <FormMessage />
               </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="nameAttr"
+            render={({ field }) => (
+              <FormFieldInput label="Name Attribute">
+                <Input placeholder="Name Attribute" {...field} />
+              </FormFieldInput>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="priceAttr"
+            render={({ field }) => (
+              <FormFieldInput label="Price Attribute">
+                <Input placeholder="Price Attribute" {...field} />
+              </FormFieldInput>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="quantityAttr"
+            render={({ field }) => (
+              <FormFieldInput label="Quantity Attribute">
+                <Input placeholder="Quantity Attribute" {...field} />
+              </FormFieldInput>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="color"
+            render={({ field }) => (
+              <FormFieldInput label="Color">
+                <Input className="w-1/6" type="color" {...field} />
+              </FormFieldInput>
             )}
           />
 

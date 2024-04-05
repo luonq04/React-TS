@@ -1,89 +1,50 @@
-// import { ReactNode, createContext, useEffect, useReducer } from "react";
-// import { IProduct } from "../interface/product";
-// import axios from "axios";
+// import { createContext, useContext, useReducer } from "react";
+
+// const ProductContext = createContext();
 
 // const initialState = {
-//   value: [] as IProduct[],
-//   isLoading: false,
+//   newAttribute: null,
 // };
+
 // function reducer(state, action) {
 //   switch (action.type) {
-//     case "LOADING":
-//       return { ...state, isLoading: true };
-
-//     case "SET_PRODUCTS":
+//     case "cart/added":
 //       return {
 //         ...state,
-//         value: action.payload,
-//         isLoading: false,
-//       };
-
-//     case "DELETE_PPRODUCT":
-//       return {
-//         ...state,
-//         value: state.value.filter(
-//           (product: IProduct) => product._id !== action.payload
-//         ),
-//       };
-
-//     case "ADD_PRODUCT":
-//       return {
-//         ...state,
-//         value: [...state.value, action.payload],
-//       };
-
-//     case "EDIT_PRODUCT":
-//       return {
-//         ...state,
-//         value: state.value.map((pro) =>
-//           pro.id === action.payload._id ? action.payload : pro
-//         ),
+//         newAttribute: action.payload,
 //       };
 
 //     default:
 //       throw new Error("Unknown action type");
 //   }
-
-//   return state;
 // }
 
-// export const ProductContext = createContext({} as any);
+// function ProductProvider({ children }) {
+//   const [{ cart, discount }, dispatch] = useReducer(reducer, initialState);
 
-// const ProductContextProvider = ({ children }: { children: ReactNode }) => {
-//   const [products, dispatch] = useReducer(reducer, initialState);
-
-//   useEffect(function () {
-//     (async () => {
-//       dispatch({ type: "LOADING" });
-//       try {
-//         const { data } = await axios.get("http://localhost:8080/api/products");
-
-//         dispatch({ type: "SET_PRODUCTS", payload: data });
-//       } catch (error) {
-//         console.log(error);
-//       }
-//     })();
-//   }, []);
-
-//   function deleteProduct(id: string) {
-//     dispatch({ type: "DELETE_PPRODUCT", payload: id });
-//   }
-
-//   function addProduct(product: IProduct) {
-//     dispatch({ type: "ADD_PRODUCT", payload: product });
-//   }
-
-//   function editProduct(product: IProduct) {
-//     dispatch({ type: "EDIT_PRODUCT", payload: product });
+//   function addItem(item) {
+//     dispatch({ type: "cart/added", payload: item });
 //   }
 
 //   return (
 //     <ProductContext.Provider
-//       value={{ products, deleteProduct, addProduct, editProduct, dispatch }}
+//       value={{
+//         cart,
+//         addItem,
+//       }}
 //     >
 //       {children}
 //     </ProductContext.Provider>
 //   );
-// };
+// }
 
-// export default ProductContextProvider;
+// function useProduct() {
+//   const context = useContext(ProductContext);
+
+//   if (context === undefined)
+//     throw new Error("useProduct was outside the ProductContext");
+
+//   return context;
+// }
+
+// export { ProductProvider, useProduct };

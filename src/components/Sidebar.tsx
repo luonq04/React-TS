@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import {
   ChevronRight,
   File,
+  Grip,
   LayoutDashboard,
   LayoutPanelLeft,
   Settings,
@@ -48,9 +49,15 @@ const Sidebar = () => {
             variant: "ghost",
           },
           {
-            title: "Category",
+            title: "Categories",
             href: "/dashboard/categories",
             icon: LayoutPanelLeft,
+            variant: "ghost",
+          },
+          {
+            title: "Attributes",
+            href: "/dashboard/attributes",
+            icon: Grip,
             variant: "ghost",
           },
           {

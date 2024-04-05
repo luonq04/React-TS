@@ -17,10 +17,21 @@ export const formAddSchema = z.object({
   image: z.any().refine((val) => val !== undefined, "File is required"),
 
   gallery: z.any(),
+
+  attributes: z.any(),
+
   tags: z.array(z.string()).refine((value) => value.some((item) => item), {
     message: "You have to select at least one item.",
   }),
   description: z.string(),
+
+  color: z.string({
+    required_error: "Please select a color for product.",
+  }),
+
+  nameAttr: z.string(),
+  priceAttr: z.coerce.number(),
+  quantityAttr: z.coerce.number(),
 });
 
 export const formEditSchema = z.object({
@@ -50,4 +61,12 @@ export const formAddCategorySchema = z.object({
   name: z.string().min(2, {
     message: "Name must be at least 2 characters.",
   }),
+});
+
+export const formAddAttributeSchema = z.object({
+  name: z.string().min(2, {
+    message: "Name must be at least 2 characters.",
+  }),
+
+  product: z.any(),
 });

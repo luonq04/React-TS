@@ -9,7 +9,7 @@ export const addProduct = async (product: IProduct) => {
   try {
     // return await instance.post(`/products`, product);
     const { data } = await instance.post(`/products`, product);
-    console.log(data);
+    return data;
   } catch (error) {
     console.log(error);
     throw error;

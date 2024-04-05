@@ -1,16 +1,13 @@
+import useAddToCart from "@/hooks/useAddToCart";
 import { Link } from "react-router-dom";
 import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
-import useAddToCart from "@/hooks/useAddToCart";
-import { useLocalStorage } from "@/hooks/useStorage";
 import Loader from "./Loader";
 
 const ProductItem = ({ product }: { product: IProduct }) => {
   const { name, image, price, sale, type, _id } = product;
 
-  const [user] = useLocalStorage("user", {});
-
-  const { addToCart, isAdding } = useAddToCart(user);
+  const { addToCart, isAdding } = useAddToCart();
 
   if (isAdding) return <Loader />;
 

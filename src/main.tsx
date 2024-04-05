@@ -12,6 +12,7 @@ import "./sass/checkout.scss";
 // import ProductContextProvider from "./context/ProductProvider.tsx";
 import { QueryClient, QueryClientProvider } from "react-query";
 import { Toaster } from "./components/ui/toaster.tsx";
+import { ProductProvider } from "./context/ProductProvider.tsx";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,11 +24,11 @@ const queryClient = new QueryClient({
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
-    {/* <ProductContextProvider> */}
+    {/* <ProductProvider> */}
     <QueryClientProvider client={queryClient}>
       <App />
       <Toaster />
     </QueryClientProvider>
-    {/* </ProductContextProvider> */}
+    {/* </ProductProvider> */}
   </React.StrictMode>
 );

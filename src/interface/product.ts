@@ -17,6 +17,7 @@ export interface IProducts {
 export interface IProduct {
   _id?: string;
   name: string;
+  attributes?: [];
   image: string;
   category?: string;
   price?: number;

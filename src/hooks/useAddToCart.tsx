@@ -1,9 +1,11 @@
 import instance from "@/configs/axios";
 import { useMutation, useQueryClient } from "react-query";
+import { useLocalStorage } from "./useStorage";
 
-export default function useAddToCart(id: string) {
-  const userId = id.user._id;
-  // console.log(userId);
+export default function useAddToCart() {
+  const [user] = useLocalStorage("user", {});
+
+  const userId = user?.user?._id;
 
   const queryClient = useQueryClient();
 

@@ -195,9 +195,6 @@ export default function EditProductPage() {
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    {/* <SelectItem value="1">asd</SelectItem>
-                    <SelectItem value="660025d6d62df2a8ea1fce34">lo</SelectItem> */}
-
                     {category.map((cate: ICategory) => (
                       <SelectItem value={cate._id!} key={cate._id}>
                         {cate.name}

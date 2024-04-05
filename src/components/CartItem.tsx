@@ -11,6 +11,9 @@ import useDecreaseQuantity from "@/hooks/useDecreaseQuantity";
 
 const CartItem = () => {
   const [user] = useLocalStorage("user", {});
+
+  if (!user.user) return;
+
   const userId = user.user._id;
   const { deleteProductCart, isDeleting } = useDeleteProductCart(user);
   const { increasing } = useIncreaseQuantity(user);
@@ -28,7 +31,7 @@ const CartItem = () => {
 
   return (
     <>
-      {data.map((pro) => (
+      {data?.map((pro) => (
         <div className="cart-item" key={pro.productId}>
           <div className="cart-info-1">
             <img src={pro.image} alt="Image product" />
