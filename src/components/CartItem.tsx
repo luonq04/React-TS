@@ -23,6 +23,7 @@ const CartItem = () => {
     queryKey: ["Cart", userId],
     queryFn: async () => {
       const { data } = await instance.get(`/cart/${userId}`);
+      console.log(data);
       return data;
     },
   });

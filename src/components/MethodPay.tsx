@@ -1,4 +1,23 @@
+import useCart from "@/hooks/useCart";
+import Loader from "./Loader";
+import { formatCurrency } from "@/utils/helpers";
+
+type ItemIncart = {
+  productID: string;
+  name: string;
+  quantity: number;
+  price: number;
+  image: string;
+  color: string;
+  size: string;
+};
+
 const MethodPay = () => {
+  const { data, isLoading, calculateTotal } = useCart();
+
+  if (isLoading) return <Loader />;
+  // console.log(data);
+
   return (
     <div className="method-pay">
       <div className="price-checkout">
@@ -6,22 +25,28 @@ const MethodPay = () => {
           <h2 className="heading-info__checkout">Product</h2>
           <h2 className="heading-info__checkout">Subtotal</h2>
         </div>
-        <div className="wrapper-info__checkout">
-          <div className="product-wrapper">
-            <h4 className="product-name">Asgaard sofa</h4>
-            <span>x 1</span>
+        {/* ==== Thong tin gio hang ==== */}
+        {data.map((product: ItemIncart) => (
+          <div className="wrapper-info__checkout" key={product.productID}>
+            <div className="product-wrapper">
+              <h4 className="product-name">{product.name}</h4>
+              <span>x {product.quantity}</span>
+            </div>
+            <span className="product-price">
+              {formatCurrency(product.price)} đ
+            </span>
           </div>
-          <span className="product-price">25.000.000đ</span>
-        </div>
-        <div className="wrapper-info__checkout">
-          <p>Asgaard sofa</p>
-          <span className="product-price">25.000.000đ</span>
-        </div>
+        ))}
+
         <div className="wrapper-info__checkout">
           <p>Total</p>
-          <span className="total-price">25.000.000đ</span>
+          <span className="total-price">
+            {formatCurrency(calculateTotal())} đ
+          </span>
         </div>
       </div>
+      {/* ==== Thong tin gio hang ==== */}
+
       <div className="method-pay__description">
         <div className="medthod-pay__bank">
           <label className="container-label">
@@ -49,7 +74,7 @@ const MethodPay = () => {
           <p className="policy">
             Your personal data will be used to support your experience
             throughout this website, to manage access to your account, and for
-            other purposes described in our
+            other purposes described in our{" "}
             <a className="policy-detail">privacy policy.</a>
           </p>
         </div>

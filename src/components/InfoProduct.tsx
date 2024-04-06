@@ -3,14 +3,20 @@ import { IProduct } from "../interface/product";
 import { formatCurrency } from "../utils/helpers";
 import instance from "@/configs/axios";
 import { toast } from "./ui/use-toast";
+import { useLocalStorage } from "@/hooks/useStorage";
 
 type SizeType = { color: string }[];
 
 const InfoProduct = ({ product }: { product: IProduct }) => {
   const imgEl = useRef(null);
   const [size, setSize] = useState<SizeType>([]);
-  const [detail, setDetail] = useState([]);
+  const [attributeValue, setAttributeValue] = useState([]);
+  const [attributeId, setAttributeId] = useState("");
   const [count, setCount] = useState(1);
+
+  const [user] = useLocalStorage("user", {});
+
+  console.log(user);
 
   function increaseCount() {
     setCount(count + 1);
@@ -49,16 +55,19 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
   } = product;
 
   async function getValue(e) {
+    setAttributeId(e.target.value);
     const { data } = await instance.get(`attributes/${e.target.value}`);
+    console.log(data);
     setSize(data.values);
+    setAttributeValue(data.values[0]);
   }
 
   function getValueDetail(e) {
     const valueProduct = size.find((item) => item._id === e.target.value);
-    setDetail(valueProduct);
+    setAttributeValue(valueProduct);
   }
 
-  function handleSubmit() {
+  async function handleSubmit() {
     if (size.length === 0)
       return toast({
         className: "bg-red-400 text-white",
@@ -66,16 +75,29 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
         duration: 2000,
       });
 
-    if (detail.length === 0)
+    if (attributeValue.length === 0)
       return toast({
         className: "bg-red-400 text-white",
         title: "Please choose color",
         duration: 2000,
       });
+
+    const item = {
+      userId: user.user._id,
+      quantity: count,
+      product: _id,
+      attribute: attributeId,
+      attributeValue: attributeValue._id,
+    };
+
+    const { data } = await instance.post("/cart/add-to-cart", item);
+    console.log(data);
   }
 
-  console.log(attributes);
-  console.log(size);
+  // console.log("DETAIL", detail);
+  // console.log("SIZE", size);
+  // console.log("Attribute", attributeValue);
+  // console.log(attributeId);
 
   return (
     <div>
@@ -97,7 +119,10 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
             <div className="product-detail__right">
               <h1 className="product-detail__heading">{name}</h1>
               <span className="product-detail__price">
-                {formatCurrency(detail.price! ? detail.price! : price)}đ
+                {formatCurrency(
+                  attributeValue.price! ? attributeValue.price! : price
+                )}
+                đ
               </span>
               <div className="product-detail__feedback">
                 <div className="product-detail__star">
@@ -137,7 +162,9 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
                       style={{
                         backgroundColor: color.color,
                         border:
-                          color._id === detail._id ? "2px solid #6d6464" : "",
+                          color._id === attributeValue._id
+                            ? "2px solid #6d6464"
+                            : "",
                       }}
                       onClick={getValueDetail}
                     />
