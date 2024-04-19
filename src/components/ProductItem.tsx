@@ -34,10 +34,10 @@ const ProductItem = ({ product }: { product: IProduct }) => {
           {type}
         </Link>
         <div className="product-price">
-          <span className="product-price__new">{formatCurrency(price!)}đ</span>
-          <span className="product-price__old">
+          <span className="product-price__new">
             {formatCurrency(price! - price! * (sale! / 100))}đ
           </span>
+          <span className="product-price__old">{formatCurrency(price!)}đ</span>
         </div>
       </div>
       <div className="product-item-content-extra">

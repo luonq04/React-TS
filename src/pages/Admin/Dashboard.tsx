@@ -1,7 +1,5 @@
-import Userpage from "./UserPage";
-
 const Dashboard = () => {
-  return <Userpage />;
+  return <div>Dashboard</div>;
 };
 
 export default Dashboard;

@@ -1,85 +1,36 @@
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
-import { FixedSizeList } from "react-window";
+import Loader from "@/components/Loader";
+import { getCategoryColumns } from "@/components/orders/columns";
+import { DataTable } from "@/components/orders/data-table";
+import { useQueryAllOrder } from "@/hooks/useQueryAllOrder";
+import { Link } from "react-router-dom";
 
-function OrderPage() {
-  const { control, handleSubmit } = useForm();
-  const [numberOfFields, setNumberOfFields] = useState(1); // Số lượng trường input mặc định, bắt đầu từ 1 để có trường nhập đầu tiên
+const OrderPage = () => {
+  const { data, isLoading } = useQueryAllOrder();
 
-  const onSubmit = (data) => {
-    console.log(data);
+  if (isLoading) return <Loader />;
+  // console.log(data);
+
+  const onDelete = (category) => {
+    const confirm = window.confirm("Bạn có chắc chắn muốn danh mục này không?");
+    if (confirm) {
+      // delCategory(category._id);
+    }
   };
-
-  const addFields = () => {
-    setNumberOfFields((prev) => prev + 1); // Tăng số lượng trường input lên 1 khi nhấn nút "Thêm trường"
-  };
-
-  const Row = ({ index, style }) => {
-    return (
-      <div className="flex flex-col mb-4">
-        <h3>Values {index + 1}</h3>
-        <Controller
-          name={`items[${index}].name`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              className="mb-4 ml-1 w-2/3"
-              {...field}
-              placeholder={`name ${index + 1}`}
-              {...field}
-            />
-          )}
-        />
-        <Controller
-          name={`items[${index}].quantity`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              className="mb-4 ml-1 w-2/3"
-              {...field}
-              placeholder={`quantity ${index + 1}`}
-            />
-          )}
-        />
-        <Controller
-          name={`items[${index}].price`}
-          control={control}
-          render={({ field }) => (
-            <Input
-              className="mb-4 ml-1 w-2/3"
-              {...field}
-              placeholder={`price  ${index + 1}`}
-            />
-          )}
-        />
-      </div>
-    );
-  };
+  const columns = getCategoryColumns(onDelete);
 
   return (
-    <div>
-      <div className="flex items-center mb-7">
-        <h2 className="text-2xl font-medium">Add values</h2>
-
-        <Button className="ml-auto" onClick={addFields} variant="outline">
-          Thêm trường
-        </Button>
+    <>
+      <div className="flex justify-between mb-10">
+        <h3 className="ml-5 text-xl">Orders</h3>
+        {/* <Link to="/dashboard/categories/add">
+          <button className="p-3 bg-slate-300 rounded-lg hover:bg-slate-400">
+            Add Order
+          </button>
+        </Link> */}
       </div>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <FixedSizeList
-          height={numberOfFields * 300} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
-          width={1000} // Độ rộng của danh sách
-          itemSize={60} // Chiều cao của mỗi mục trong danh sách
-          itemCount={numberOfFields} // Số lượng trường input
-        >
-          {Row}
-        </FixedSizeList>
-        <input type="submit" />
-      </form>
-    </div>
+      <DataTable columns={columns} data={data} />
+    </>
   );
-}
+};
 
 export default OrderPage;

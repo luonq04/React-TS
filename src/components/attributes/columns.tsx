@@ -26,7 +26,7 @@ export const getCategoryColumns = (
     header: "Values",
 
     cell: ({ row }) => {
-      console.log(row.original);
+      // console.log(row.original);
       return <span className="ml-7">{row.original.values.length}</span>;
     },
   },

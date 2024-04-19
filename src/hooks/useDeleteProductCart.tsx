@@ -7,14 +7,20 @@ export default function useDeleteProductCart(id: string) {
   const queryClient = useQueryClient();
 
   const { mutate: deleteProductCart, isLoading: isDeleting } = useMutation({
-    mutationFn: async (product) => {
-      console.log(product);
+    mutationFn: async (infoProduct) => {
+      const { product, attribute, attributeValue } = infoProduct;
+
       const { data } = await instance.post("cart/remove-from-cart", {
         userId,
         productDel: product,
+        attribute,
+        attributeValue,
       });
+
+      console.log(data);
       return data;
     },
+
     onSuccess: () => {
       queryClient.invalidateQueries(["Cart", userId]);
     },

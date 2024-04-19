@@ -4,23 +4,23 @@ import Loader from "@/components/Loader";
 import { Link } from "react-router-dom";
 
 import { getCategoryColumns } from "@/components/attributes/columns";
-import { useDeleteCategory } from "@/hooks/useDeleteCategory";
 import { useQueryAllAttribute } from "@/hooks/useQueryAllAttribute";
+import { useDeleteAttribute } from "@/hooks/useDeleteAttribute";
+import { toast } from "@/components/ui/use-toast";
 
 const AttributePage = () => {
-  const { delCategory } = useDeleteCategory();
   const { attributes, isLoadingAttribute } = useQueryAllAttribute();
+  const { delAttribute } = useDeleteAttribute();
 
   if (isLoadingAttribute) return <Loader />;
 
-  // const attributesProduct = allProducts.filter(
-  //   (pro) => pro.attributes.length > 0
-  // );
-
-  const onDelete = (category) => {
+  const onDelete = (attribute) => {
     const confirm = window.confirm("Bạn có chắc chắn muốn danh mục này không?");
     if (confirm) {
-      delCategory(category._id);
+      delAttribute(attribute._id);
+      toast({
+        title: "Delete Attribute",
+      });
     }
   };
   const columns = getCategoryColumns(onDelete);

@@ -5,10 +5,15 @@ import instance from "@/configs/axios";
 import { toast } from "./ui/use-toast";
 import { useLocalStorage } from "@/hooks/useStorage";
 
-type SizeType = { color: string }[];
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
+type SizeType = {
+  _id: string;
+  color: string;
+}[];
 
 const InfoProduct = ({ product }: { product: IProduct }) => {
-  const imgEl = useRef(null);
+  const imgEl = useRef<HTMLImageElement>(null);
   const [size, setSize] = useState<SizeType>([]);
   const [attributeValue, setAttributeValue] = useState([]);
   const [attributeId, setAttributeId] = useState("");
@@ -28,7 +33,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
   }
 
   useEffect(function () {
-    function callback(e) {
+    function callback(e: any) {
       if (!e.target.getAttribute("data-img")) return;
 
       if (e.target.src === null) return;
@@ -54,16 +59,20 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
     image,
   } = product;
 
-  async function getValue(e) {
+  async function getValue(e: any) {
     setAttributeId(e.target.value);
     const { data } = await instance.get(`attributes/${e.target.value}`);
     console.log(data);
+
+    if (data.values.length === 0) return setAttributeValue([]);
+
     setSize(data.values);
     setAttributeValue(data.values[0]);
   }
 
-  function getValueDetail(e) {
+  function getValueDetail(e: any) {
     const valueProduct = size.find((item) => item._id === e.target.value);
+    console.log(valueProduct);
     setAttributeValue(valueProduct);
   }
 
@@ -91,7 +100,12 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
     };
 
     const { data } = await instance.post("/cart/add-to-cart", item);
-    console.log(data);
+    // console.log(data);
+    toast({
+      className: "bg-green-400 text-white",
+      title: "Add to cart success",
+      duration: 2000,
+    });
   }
 
   // console.log("DETAIL", detail);
@@ -155,7 +169,7 @@ const InfoProduct = ({ product }: { product: IProduct }) => {
               <div className="product-detail__color">
                 <span>Color</span>
                 <div className="product-detail__color-button">
-                  {size.map((color, index) => (
+                  {size.map((color) => (
                     <button
                       value={color._id}
                       key={color._id}

@@ -1,7 +1,30 @@
 import { Link } from "react-router-dom";
 import CartItem from "./CartItem";
+import { useLocalStorage } from "@/hooks/useStorage";
+import { useQuery } from "react-query";
+import instance from "@/configs/axios";
+import Loader from "./Loader";
+import { formatCurrency } from "@/utils/helpers";
 
 const Carts = () => {
+  const [user] = useLocalStorage("user", {});
+
+  if (!user.user) return;
+
+  const userId = user.user._id;
+
+  const { data, isLoading } = useQuery({
+    queryKey: ["Cart", userId],
+    queryFn: async () => {
+      const { data } = await instance.get(`/cart/${userId}`);
+      console.log(data);
+      return data;
+    },
+  });
+
+  if (isLoading) return <Loader />;
+  console.log(data);
+
   return (
     <section className="cart">
       <div className="container">
@@ -32,13 +55,25 @@ const Carts = () => {
                     Subtotal
                   </span>
                   <span className="cart-checkout__subtotal-price">
-                    25.000.000đ
+                    {formatCurrency(
+                      data?.reduce(
+                        (acc, item) => acc + item.price * item.quantity,
+                        0
+                      )
+                    )}{" "}
+                    đ
                   </span>
                 </div>
                 <div className="cart-checkout__total">
                   <span className="cart-checkout__subtotal-title">Total</span>
                   <span className="cart-checkout__total-money">
-                    25.000.000đ
+                    {formatCurrency(
+                      data?.reduce(
+                        (acc, item) => acc + item.price * item.quantity,
+                        0
+                      )
+                    )}{" "}
+                    đ
                   </span>
                 </div>
               </div>

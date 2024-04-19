@@ -1,26 +1,26 @@
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import AppLayout from "./components/AppLayout";
-import Home from "./pages/HomePage";
-import ShopPage from "./pages/ShopPage";
-import CartPage from "./pages/CartPage";
-import ProductDetailPage from "./pages/ProductDetailPage";
 import AppLayoutAdmin from "./components/AppLayoutAdmin";
-import Dashboard from "./pages/Admin/Dashboard";
-import ProductsPage from "./pages/Admin/ProductsPage";
-import OrderPage from "./pages/Admin/OrderPage";
-import UserPage from "./pages/Admin/UserPage";
-import SettingPage from "./pages/Admin/SettingPage";
-import AddProductPage from "./pages/Admin/AddProductPage";
-import EditProductPage from "./pages/Admin/EditProductPage";
-import CheckoutPage from "./pages/CheckoutPage";
-import Signup from "./pages/Signup";
-import Signin from "./pages/Signin";
-import CategoryPage from "./pages/Admin/CategoryPage";
-import EditCategoryPage from "./pages/Admin/EditCategoryPage";
-import AddCategoryPage from "./pages/Admin/AddCategoryPage";
-import AttributePage from "./pages/Admin/AttributePage";
 import AddAttributepage from "./pages/Admin/AddAttributePage";
+import AddCategoryPage from "./pages/Admin/AddCategoryPage";
+import AddProductPage from "./pages/Admin/AddProductPage";
+import AttributePage from "./pages/Admin/AttributePage";
+import CategoryPage from "./pages/Admin/CategoryPage";
+import Dashboard from "./pages/Admin/Dashboard";
 import EditAttributePage from "./pages/Admin/EditAttributePage";
+import EditCategoryPage from "./pages/Admin/EditCategoryPage";
+import EditProductPage from "./pages/Admin/EditProductPage";
+import OrderPage from "./pages/Admin/OrderPage";
+import ProductsPage from "./pages/Admin/ProductsPage";
+import SettingPage from "./pages/Admin/SettingPage";
+import UserPage from "./pages/Admin/UserPage";
+import CartPage from "./pages/CartPage";
+import CheckoutPage from "./pages/CheckoutPage";
+import Home from "./pages/HomePage";
+import ProductDetailPage from "./pages/ProductDetailPage";
+import ShopPage from "./pages/ShopPage";
+import Signin from "./pages/Signin";
+import Signup from "./pages/Signup";
 
 function App() {
   return (

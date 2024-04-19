@@ -18,6 +18,15 @@ export const createAttribute = async (attribute: string) => {
   }
 };
 
+export const deleteAttribute = async (id: string) => {
+  try {
+    const { data } = await instance.delete(`/attributes/${id}`);
+    return data;
+  } catch (error) {
+    return error;
+  }
+};
+
 // ================== Attribute Value ==================
 
 export const createAttributeValue = async (attriVal) => {
@@ -39,6 +48,7 @@ export const createAttributeValue = async (attriVal) => {
 };
 
 export const getAttributeById = async (id: string) => {
+  // console.log(id);
   try {
     const { data } = await instance.get(`attributes/${id}`);
     return data;
@@ -50,6 +60,31 @@ export const getAttributeById = async (id: string) => {
 export const delAttributeValue = async (id: string) => {
   try {
     const { data } = await instance.delete(`/attributes/${id}/values`);
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const getAttributeValueById = async (id: string) => {
+  try {
+    const { data } = await instance.get(`/attributeValues/${id}`);
+    return data;
+  } catch (error) {
+    throw new Error(error);
+  }
+};
+
+export const updateAttributeValueById = async (id: string, attriVal) => {
+  try {
+    const { name, price, quantity, color } = attriVal;
+
+    const { data } = await instance.put(`/attributeValues/${id}`, {
+      name,
+      price,
+      quantity,
+      color,
+    });
     return data;
   } catch (error) {
     throw new Error(error);

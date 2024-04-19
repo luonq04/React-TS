@@ -1,104 +1,85 @@
-import { memo, useState } from "react";
-import { FormProvider, useForm, useFormContext } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { FixedSizeList } from "react-window";
 
-import AutoSizer from "react-virtualized-auto-sizer";
-import { VariableSizeList as List } from "react-window";
+function SettingPage() {
+  const { control, handleSubmit } = useForm();
+  const [numberOfFields, setNumberOfFields] = useState(1); // Số lượng trường input mặc định, bắt đầu từ 1 để có trường nhập đầu tiên
 
-// =====================================
+  const onSubmit = (data) => {
+    console.log(data);
+  };
 
-const WindowedRow = memo(({ index, style, data }) => {
-  console.log(index, style, data);
+  const addFields = () => {
+    setNumberOfFields((prev) => prev + 1); // Tăng số lượng trường input lên 1 khi nhấn nút "Thêm trường"
+  };
 
-  const { register } = useFormContext();
-  const nmKey = `${index}.name`;
-  const prKey = `${index}.price`;
-  const qtyKey = `${index}.quantity`;
+  const Row = ({ index, style }) => {
+    return (
+      <div className="flex flex-col mb-4">
+        <h3>Values {index + 1}</h3>
+        <Controller
+          name={`items[${index}].name`}
+          control={control}
+          render={({ field }) => (
+            <Input
+              className="mb-4 ml-1 w-2/3"
+              {...field}
+              placeholder={`name ${index + 1}`}
+              {...field}
+            />
+          )}
+        />
+        <Controller
+          name={`items[${index}].quantity`}
+          control={control}
+          render={({ field }) => (
+            <Input
+              className="mb-4 ml-1 w-2/3"
+              {...field}
+              placeholder={`quantity ${index + 1}`}
+            />
+          )}
+        />
+        <Controller
+          name={`items[${index}].price`}
+          control={control}
+          render={({ field }) => (
+            <Input
+              className="mb-4 ml-1 w-2/3"
+              {...field}
+              placeholder={`price  ${index + 1}`}
+            />
+          )}
+        />
+      </div>
+    );
+  };
 
   return (
-    <div className="flex flex-col">
-      <label>Name</label>
-      <input
-        type="text"
-        className=" bg-slate-300 block my-5 border border-gray-400"
-        {...register(nmKey)}
-      />
-      <label>Quantity</label>
-      <input
-        type="text"
-        className=" bg-slate-300 block my-5 border border-gray-400"
-        {...register(qtyKey)}
-      />
-      <label>Price</label>
-      <input
-        type="text"
-        className=" bg-slate-300 block my-5 border border-gray-400"
-        {...register(prKey)}
-      />
+    <div>
+      <div className="flex items-center mb-7">
+        <h2 className="text-2xl font-medium">Add values</h2>
+
+        <Button className="ml-auto" onClick={addFields} variant="outline">
+          Thêm trường
+        </Button>
+      </div>
+      <form onSubmit={handleSubmit(onSubmit)}>
+        <FixedSizeList
+          height={numberOfFields * 300} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
+          width={1000} // Độ rộng của danh sách
+          itemSize={60} // Chiều cao của mỗi mục trong danh sách
+          itemCount={numberOfFields} // Số lượng trường input
+        >
+          {Row}
+        </FixedSizeList>
+        <input type="submit" />
+      </form>
     </div>
   );
-});
-
-// const FormSchema = z.object({
-//   email: z
-//     .string({
-//       required_error: "Please select an email to display.",
-//     })
-//     .email(),
-//   name: z.string(),
-//   quantity: z.coerce.number(),
-//   price: z.string(),
-// });
-
-const SettingPage = () => {
-  let [count, setCount] = useState(1);
-  console.log(count);
-
-  function increase() {
-    if (count < 2) setCount(count + 1);
-    else return;
-  }
-
-  const items = Array.from(Array(count).keys()).map((i) => ({
-    // title: `List ${i}`,
-    // quantity: Math.floor(Math.random() * 10),
-  }));
-
-  const onSubmit = (data) => console.log(Object.values(data));
-  const formMethods = useForm({ defaultValues: items });
-
-  return (
-    <>
-      <button className="mb-4" onClick={increase}>
-        Add
-      </button>
-
-      <form
-        className="form max-w-96 max-h-96"
-        onSubmit={formMethods.handleSubmit(onSubmit)}
-      >
-        <FormProvider {...formMethods}>
-          <AutoSizer>
-            {({ height, width }) => (
-              <div className="">
-                <List
-                  height={height}
-                  itemCount={items.length}
-                  itemSize={() => 100}
-                  width={width}
-                  itemData={items}
-                >
-                  {WindowedRow}
-                </List>
-              </div>
-            )}
-          </AutoSizer>
-        </FormProvider>
-        <button className="mt-96" type="submit">
-          Submit
-        </button>
-      </form>
-    </>
-  );
-};
+}
 
 export default SettingPage;

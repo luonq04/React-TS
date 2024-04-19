@@ -64,6 +64,9 @@ export default function AddProductPage() {
       sale: 0,
       tags: ["shoes", "trendy"],
       description: "",
+      nameAttr: "",
+      priceAttr: 0,
+      quantityAttr: 0,
     },
   });
 
