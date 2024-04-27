@@ -9,6 +9,18 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+
+import {
+  Drawer,
+  DrawerClose,
+  DrawerContent,
+  DrawerDescription,
+  DrawerFooter,
+  DrawerHeader,
+  DrawerTitle,
+  DrawerTrigger,
+} from "@/components/ui/drawer";
+
 import { Form, FormField } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { useCreateAttriVal } from "@/hooks/useCreateAttriVal";
@@ -48,83 +60,101 @@ const Userpage = () => {
   });
 
   const { id } = useParams();
-  const { createAttriVal } = useCreateAttriVal(id!);
+  // const { createAttriVal } = useCreateAttriVal(id!);
 
   function onSubmit(values: z.infer<typeof formSchema>) {
-    const valuesAttribute = {
-      ...values,
-      attributeId: id,
-    };
-    createAttriVal(valuesAttribute);
+    // const valuesAttribute = {
+    //   ...values,
+    //   attributeId: id,
+    // };
+    // createAttriVal(valuesAttribute);
     form.reset();
   }
 
   return (
-    <Form {...form}>
-      <Dialog>
-        <DialogTrigger asChild>
-          <Button variant="outline">Add Values Attribute</Button>
-        </DialogTrigger>
-        <DialogContent className="sm:max-w-[500px]">
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-            <DialogHeader>
-              <DialogTitle>Add Values Attribute</DialogTitle>
-            </DialogHeader>
-            <FormField
-              control={form.control}
-              name="name"
-              render={({ field }) => (
-                <FormFieldInput label="Name">
-                  <Input placeholder="Name product" {...field} />
-                </FormFieldInput>
-              )}
-            />
-            <FormField
-              control={form.control}
-              name="price"
-              render={({ field }) => (
-                <FormFieldInput label="Price">
-                  <Input placeholder="Price product" {...field} />
-                </FormFieldInput>
-              )}
-            />
+    <>
+      <Form {...form}>
+        <Dialog>
+          <DialogTrigger asChild>
+            <Button variant="outline">Add Values Attribute</Button>
+          </DialogTrigger>
+          <DialogContent className="sm:max-w-[500px]">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
+              <DialogHeader>
+                <DialogTitle>Add Values Attribute</DialogTitle>
+              </DialogHeader>
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormFieldInput label="Name">
+                    <Input placeholder="Name product" {...field} />
+                  </FormFieldInput>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="price"
+                render={({ field }) => (
+                  <FormFieldInput label="Price">
+                    <Input placeholder="Price product" {...field} />
+                  </FormFieldInput>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="quantity"
-              render={({ field }) => (
-                <FormFieldInput label="Quantity">
-                  <Input placeholder="Quantity product" {...field} />
-                </FormFieldInput>
-              )}
-            />
+              <FormField
+                control={form.control}
+                name="quantity"
+                render={({ field }) => (
+                  <FormFieldInput label="Quantity">
+                    <Input placeholder="Quantity product" {...field} />
+                  </FormFieldInput>
+                )}
+              />
 
-            <FormField
-              control={form.control}
-              name="color"
-              render={({ field }) => (
-                <FormFieldInput label="Quantity">
-                  <Input
-                    className="w-1/3"
-                    type="color"
-                    placeholder="Quantity product"
-                    {...field}
-                  />
-                </FormFieldInput>
-              )}
-            />
-            <DialogFooter>
-              <Button type="submit">Save</Button>
-              <DialogClose asChild>
-                <Button type="button" variant="secondary">
-                  Close
-                </Button>
-              </DialogClose>
-            </DialogFooter>
-          </form>
-        </DialogContent>
-      </Dialog>
-    </Form>
+              <FormField
+                control={form.control}
+                name="color"
+                render={({ field }) => (
+                  <FormFieldInput label="Quantity">
+                    <Input
+                      className="w-1/3"
+                      type="color"
+                      placeholder="Quantity product"
+                      {...field}
+                    />
+                  </FormFieldInput>
+                )}
+              />
+              <DialogFooter>
+                <Button type="submit">Save</Button>
+                <DialogClose asChild>
+                  <Button type="button" variant="secondary">
+                    Close
+                  </Button>
+                </DialogClose>
+              </DialogFooter>
+            </form>
+          </DialogContent>
+        </Dialog>
+      </Form>
+
+      <Drawer>
+        <DrawerTrigger>Open</DrawerTrigger>
+        <DrawerContent>
+          <DrawerHeader>
+            <DrawerTitle>Are you absolutely sure?</DrawerTitle>
+            <DrawerDescription>This action cannot be undone.</DrawerDescription>
+          </DrawerHeader>
+          <DrawerFooter>
+            <Button>Submit</Button>
+            <DrawerClose>
+              <Button variant="outline">Cancel</Button>
+            </DrawerClose>
+          </DrawerFooter>
+        </DrawerContent>
+      </Drawer>
+    </>
   );
 };
 

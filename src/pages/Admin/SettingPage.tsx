@@ -4,6 +4,14 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { FixedSizeList } from "react-window";
 
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { FormField } from "@/components/ui/form";
+
 function SettingPage() {
   const { control, handleSubmit } = useForm();
   const [numberOfFields, setNumberOfFields] = useState(1); // Số lượng trường input mặc định, bắt đầu từ 1 để có trường nhập đầu tiên
@@ -28,10 +36,10 @@ function SettingPage() {
               className="mb-4 ml-1 w-2/3"
               {...field}
               placeholder={`name ${index + 1}`}
-              {...field}
             />
           )}
         />
+
         <Controller
           name={`items[${index}].quantity`}
           control={control}
@@ -68,15 +76,25 @@ function SettingPage() {
         </Button>
       </div>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <FixedSizeList
-          height={numberOfFields * 300} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
-          width={1000} // Độ rộng của danh sách
-          itemSize={60} // Chiều cao của mỗi mục trong danh sách
-          itemCount={numberOfFields} // Số lượng trường input
-        >
-          {Row}
-        </FixedSizeList>
-        <input type="submit" />
+        <Accordion type="single" collapsible className="w-full">
+          <AccordionItem value="item-1">
+            <AccordionTrigger>Is it accessible?</AccordionTrigger>
+            <AccordionContent>
+              <FixedSizeList
+                height={numberOfFields * 200} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
+                width={500} // Độ rộng của danh sách
+                itemSize={60} // Chiều cao của mỗi mục trong danh sách
+                itemCount={numberOfFields} // Số lượng trường input
+              >
+                {Row}
+              </FixedSizeList>
+            </AccordionContent>
+          </AccordionItem>
+        </Accordion>
+
+        <Button className="mt-4" type="submit">
+          Submit
+        </Button>
       </form>
     </div>
   );

@@ -28,7 +28,8 @@ import { useCreateAttriVal } from "@/hooks/useCreateAttriVal";
 import { useCreateProduct } from "@/hooks/useCreateProduct";
 
 import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
-import instance from "@/configs/axios";
+import { useQueryAllAttribute } from "@/hooks/useQueryAllAttribute";
+// import instance from "@/configs/axios";
 
 const items = [
   {
@@ -59,20 +60,17 @@ export default function AddProductPage() {
     resolver: zodResolver(formAddSchema),
     defaultValues: {
       name: "",
-      price: 12000,
+      // price: 12000,
       // category: "Nike", // "60f1b0b3b3b3f40015f1f3b3
-      sale: 0,
+      // sale: 0,
       tags: ["shoes", "trendy"],
       description: "",
-      nameAttr: "",
-      priceAttr: 0,
-      quantityAttr: 0,
     },
   });
 
   const { createProduct, isCreating } = useCreateProduct();
   const { category, isLoading } = useQueryAllCategory();
-  const { createAttriVal } = useCreateAttriVal();
+  const { attributes, isLoadingAttribute } = useQueryAllAttribute();
 
   // 2. Define a submit handler.
   async function onSubmit(values: z.infer<typeof formAddSchema>) {
@@ -81,9 +79,9 @@ export default function AddProductPage() {
       const url = values.image ? await uploadFile(values.image) : null;
       const urls = values.gallery ? await uploadFiles(values.gallery) : null;
 
-      const { data } = await instance.post("/attributes", {
-        name: values.nameAttr,
-      });
+      // const { data } = await instance.post("/attributes", {
+      //   name: values.nameAttr,
+      // });
 
       const newProduct = {
         name: values.name,
@@ -94,19 +92,9 @@ export default function AddProductPage() {
         description: values.description,
         gallery: urls,
         image: url,
-        attributes: data._id,
       };
 
-      const newAttriVal = {
-        attributeId: data._id,
-        name: values.nameAttr,
-        price: +values.priceAttr,
-        quantity: +values.quantityAttr,
-        color: values.color,
-      };
-      await createAttriVal(newAttriVal);
-
-      await createProduct(newProduct);
+      // await createProduct(newProduct);
     } catch (error) {
       return toast({
         className: "bg-red-400 text-white",
@@ -117,6 +105,8 @@ export default function AddProductPage() {
   }
 
   if (isLoading || isCreating) return <Loader />;
+
+  console.log(attributes);
 
   return (
     <>
@@ -214,46 +204,6 @@ export default function AddProductPage() {
                 </FormControl>
                 <FormMessage />
               </FormItem>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="nameAttr"
-            render={({ field }) => (
-              <FormFieldInput label="Name Attribute">
-                <Input placeholder="Name Attribute" {...field} />
-              </FormFieldInput>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="priceAttr"
-            render={({ field }) => (
-              <FormFieldInput label="Price Attribute">
-                <Input placeholder="Price Attribute" {...field} />
-              </FormFieldInput>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="quantityAttr"
-            render={({ field }) => (
-              <FormFieldInput label="Quantity Attribute">
-                <Input placeholder="Quantity Attribute" {...field} />
-              </FormFieldInput>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="color"
-            render={({ field }) => (
-              <FormFieldInput label="Color">
-                <Input className="w-1/6" type="color" {...field} />
-              </FormFieldInput>
             )}
           />
 

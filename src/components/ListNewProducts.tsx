@@ -1,7 +1,7 @@
 import { useContext } from "react";
 import { IProduct } from "../interface/product";
 import ProductItem from "./ProductItem";
-import { ProductContext } from "../context/ProductProvider";
+import { ProductContext } from "../context/AttributeProvider";
 
 import Loader from "./Loader";
 

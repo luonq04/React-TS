@@ -21,41 +21,44 @@ import ProductDetailPage from "./pages/ProductDetailPage";
 import ShopPage from "./pages/ShopPage";
 import Signin from "./pages/Signin";
 import Signup from "./pages/Signup";
+import { AttributeProvider } from "./context/AttributeProvider";
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<AppLayout />}>
-          <Route index element={<Home />} />
-          <Route path="shop" element={<ShopPage />} />
-          <Route path="detail/:id" element={<ProductDetailPage />} />
-          <Route path="cart" element={<CartPage />} />
-          <Route path="order" element={<CheckoutPage />} />
-          <Route path="checkout" element={<CheckoutPage />} />
-          <Route path="signup" element={<Signup />} />
-          <Route path="signin" element={<Signin />} />
-        </Route>
+    <AttributeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/" element={<AppLayout />}>
+            <Route index element={<Home />} />
+            <Route path="shop" element={<ShopPage />} />
+            <Route path="detail/:id" element={<ProductDetailPage />} />
+            <Route path="cart" element={<CartPage />} />
+            <Route path="order" element={<CheckoutPage />} />
+            <Route path="checkout" element={<CheckoutPage />} />
+            <Route path="signup" element={<Signup />} />
+            <Route path="signin" element={<Signin />} />
+          </Route>
 
-        <Route path="dashboard" element={<AppLayoutAdmin />}>
-          <Route index element={<Dashboard />} />
-          <Route path="products" element={<ProductsPage />} />
-          <Route path="products/add" element={<AddProductPage />} />
-          <Route path="products/edit/:id" element={<EditProductPage />} />
-          <Route path="categories" element={<CategoryPage />} />
-          <Route path="categories/add" element={<AddCategoryPage />} />
-          <Route path="categories/edit/:id" element={<EditCategoryPage />} />
-          <Route path="attributes" element={<AttributePage />} />
-          <Route path="attributes/add" element={<AddAttributepage />} />
-          <Route path="attributes/edit/:id" element={<EditAttributePage />} />
-          <Route path="orders" element={<OrderPage />} />
-          <Route path="users" element={<UserPage />} />
-          <Route path="settings" element={<SettingPage />} />
-        </Route>
+          <Route path="dashboard" element={<AppLayoutAdmin />}>
+            <Route index element={<Dashboard />} />
+            <Route path="products" element={<ProductsPage />} />
+            <Route path="products/add" element={<AddProductPage />} />
+            <Route path="products/edit/:id" element={<EditProductPage />} />
+            <Route path="categories" element={<CategoryPage />} />
+            <Route path="categories/add" element={<AddCategoryPage />} />
+            <Route path="categories/edit/:id" element={<EditCategoryPage />} />
+            <Route path="attributes" element={<AttributePage />} />
+            <Route path="attributes/add" element={<AddAttributepage />} />
+            <Route path="attributes/edit/:id" element={<EditAttributePage />} />
+            <Route path="orders" element={<OrderPage />} />
+            <Route path="users" element={<UserPage />} />
+            <Route path="settings" element={<SettingPage />} />
+          </Route>
 
-        <Route path="*" element={<h1>404 Not Found !</h1>} />
-      </Routes>
-    </BrowserRouter>
+          <Route path="*" element={<h1>404 Not Found !</h1>} />
+        </Routes>
+      </BrowserRouter>
+    </AttributeProvider>
   );
 }
 

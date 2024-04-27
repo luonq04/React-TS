@@ -14,17 +14,28 @@ import {
 } from "@/components/ui/select";
 
 type SelectFieldProps = {
-  label: string;
+  label?: string;
   options: { _id: string; name: string }[];
   value: string;
-  onChange: () => void;
+  className?: string;
+  onChange: (newValue: string) => void;
 };
 
-const SelectField = ({ label, options, value, onChange }: SelectFieldProps) => {
+const SelectField = ({
+  label,
+  options,
+  value,
+  onChange,
+  className,
+}: SelectFieldProps) => {
+  const handleValueChange = (newValue: string) => {
+    onChange(newValue); // Gọi hàm onChange và truyền giá trị mới
+  };
+
   return (
-    <FormItem>
+    <FormItem className={className}>
       <FormLabel>{label}</FormLabel>
-      <Select onValueChange={onChange} defaultValue={value}>
+      <Select onValueChange={handleValueChange} defaultValue={value}>
         <FormControl>
           <SelectTrigger>
             <SelectValue placeholder={`Select ${label}`} />
