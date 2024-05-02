@@ -1,6 +1,19 @@
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
+import { useForm, Controller } from "react-hook-form";
 import { z } from "zod";
+import { cn } from "@/lib/utils";
+
+import Select from "react-select";
+
+import {
+  // Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectLabel,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -29,105 +42,178 @@ import { useCreateProduct } from "@/hooks/useCreateProduct";
 
 import { useQueryAllCategory } from "@/hooks/useQueryAllCategory";
 import { useQueryAllAttribute } from "@/hooks/useQueryAllAttribute";
+
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Separator } from "@/components/ui/separator";
+import { useState } from "react";
+
 // import instance from "@/configs/axios";
 
-const items = [
-  {
-    id: "shoes",
-    label: "Shoes",
-  },
-  {
-    id: "style",
-    label: "Style",
-  },
-  {
-    id: "trendy",
-    label: "Trendy",
-  },
-  {
-    id: "limited",
-    label: "Limited",
-  },
-  {
-    id: "likenew",
-    label: "Like New",
-  },
-] as const;
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Label } from "@/components/ui/label";
 
-export default function AddProductPage() {
-  // 1. Define your form.
-  const form = useForm<z.infer<typeof formAddSchema>>({
-    resolver: zodResolver(formAddSchema),
-    defaultValues: {
-      name: "",
-      // price: 12000,
-      // category: "Nike", // "60f1b0b3b3b3f40015f1f3b3
-      // sale: 0,
-      tags: ["shoes", "trendy"],
-      description: "",
-    },
-  });
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { useAttributes } from "@/context/AttributeProvider";
+import { useLocalStorage } from "@/hooks/useStorage";
+import SelectField2 from "@/components/SelectField-v2";
+
+export default function Dashboard() {
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    control,
+    // reset,
+  } = useForm();
 
   const { createProduct, isCreating } = useCreateProduct();
   const { category, isLoading } = useQueryAllCategory();
   const { attributes, isLoadingAttribute } = useQueryAllAttribute();
+  const [variations, setVariations] = useLocalStorage("variations", []);
 
-  // 2. Define a submit handler.
-  async function onSubmit(values: z.infer<typeof formAddSchema>) {
-    console.log(values);
-    try {
-      const url = values.image ? await uploadFile(values.image) : null;
-      const urls = values.gallery ? await uploadFiles(values.gallery) : null;
+  // Variation
+  const [display, setDisplay] = useState<number>(0);
+  const [variation, setVariation] = useState<any[]>([]);
+  const [valueVar, setValueVar] = useState<string[]>([]);
 
-      // const { data } = await instance.post("/attributes", {
-      //   name: values.nameAttr,
-      // });
+  const options =
+    variation[0]?.values?.map((item) => {
+      return { value: item._id, label: item.name };
+    }) ?? [];
 
-      const newProduct = {
-        name: values.name,
-        price: +values.price,
-        sale: +values.sale,
-        category: values.category,
-        tags: values.tags,
-        description: values.description,
-        gallery: urls,
-        image: url,
-      };
+  const {
+    attributesStore,
+    variationsStore,
+    addAttribute,
+    variationArray,
+    addVariation,
+    completeVariation,
+    deleteVariation,
+  } = useAttributes();
 
-      // await createProduct(newProduct);
-    } catch (error) {
-      return toast({
-        className: "bg-red-400 text-white",
-        title: "Add product Fail.",
-        duration: 2000,
-      });
-    }
+  function handleAttribute(data: string) {
+    console.log("data:", data);
+    setValueVar([]);
+    const variationChoose = attributes.filter((attr, index) =>
+      attr._id === data ? attr.values : null
+    );
+    console.log("variationChoose:", variationChoose);
+    setVariation(variationChoose);
   }
 
-  if (isLoading || isCreating) return <Loader />;
+  // console.log("variation:", variation);
 
-  console.log(attributes);
+  // 2. Define a submit handler.
+  async function onSubmit(values) {
+    console.log(values);
+    // try {
+    //   const url = values.image ? await uploadFile(values.image) : null;
+    //   const urls = values.gallery ? await uploadFiles(values.gallery) : null;
+
+    //   // const { data } = await instance.post("/attributes", {
+    //   //   name: values.nameAttr,
+    //   // });
+
+    //   const newProduct = {
+    //     name: values.name,
+    //     category: values.category,
+    //     tags: values.tags,
+    //     description: values.description,
+    //     gallery: urls,
+    //     image: url,
+    //   };
+
+    //   // await createProduct(newProduct);
+    // } catch (error) {
+    //   return toast({
+    //     className: "bg-red-400 text-white",
+    //     title: "Add product Fail.",
+    //     duration: 2000,
+    //   });
+    // }
+  }
+
+  function handleChange(selectedOption: string[]): void {
+    // console.log("selectedOption:", selectedOption);
+    setValueVar(selectedOption);
+  }
+
+  if (isLoading || isCreating || isLoadingAttribute) return <Loader />;
+
+  function filterProductsByColor(products, colorsToFilter) {
+    const filteredProducts = [];
+    products.forEach((product) => {
+      product.values.forEach((value) => {
+        colorsToFilter.forEach((color) => {
+          if (value._id === color.value) {
+            filteredProducts.push({ id_Attribute: product._id, ...value });
+          }
+        });
+      });
+    });
+    return filteredProducts;
+  }
+
+  function handleAddVariation() {
+    const [addContext] = variation;
+    // console.log(valueVar);
+
+    const filteredProducts = filterProductsByColor(variation, valueVar);
+    console.log("FILTERED PRODUCTS:", filteredProducts);
+    setVariations([...variations, filteredProducts]);
+
+    addVariation(filteredProducts);
+
+    if (attributesStore.length === 0) return addAttribute(addContext);
+
+    const existing =
+      attributesStore.findIndex(
+        (attr: object) => attr._id === addContext._id
+      ) !== -1;
+
+    if (!existing) {
+      console.log("addContext", addContext);
+      addAttribute(addContext);
+    }
+  }
 
   return (
     <>
       <h2 className="mb-5 text-2xl font-medium text-center">Add Product</h2>
-      <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8">
-          <FormField
-            control={form.control}
-            name="name"
-            render={({ field }) => (
-              <FormFieldInput label="Name">
-                <Input placeholder="Name product" {...field} />
-              </FormFieldInput>
-            )}
-          />
 
-          <FormField
-            control={form.control}
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className=" grid grid-cols-2 gap-7"
+      >
+        <div className="flex flex-col gap-4">
+          <div>
+            <Label htmlFor="picture">Name</Label>
+            <Input
+              className="mt-2"
+              type="input"
+              placeholder="Name Product"
+              {...register("name")}
+            />
+          </div>
+
+          <Controller
             name="category"
+            control={control}
+            rules={{ required: "This field is required" }}
             render={({ field }) => (
-              <SelectField
+              <SelectField2
                 label="Category"
                 options={category}
                 value={field.value}
@@ -136,143 +222,200 @@ export default function AddProductPage() {
             )}
           />
 
-          <FormField
-            control={form.control}
-            name="price"
-            render={({ field }) => (
-              <FormFieldInput label="Price">
-                <Input
-                  type="number"
-                  placeholder="Price"
-                  {...field}
-                  onChange={(e) => field.onChange(e.target.value)}
-                />
-              </FormFieldInput>
-            )}
-          />
+          {errors.category && (
+            <span style={{ color: "red" }}>{errors.category.message}</span>
+          )}
 
-          <FormField
-            control={form.control}
-            name="sale"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Sale</FormLabel>
-                <FormControl>
-                  <Input type="text" placeholder="sale" {...field} />
-                </FormControl>
+          <div>
+            <Label htmlFor="picture">Image</Label>
+            <Input className="mt-2" type="file" {...register("image")} />
+          </div>
+        </div>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+        <div className="flex flex-col gap-4 ">
+          <div className="border p-4">
+            <Tabs defaultValue="attributes" className="flex gap-3 ">
+              <div className="min-h-96">
+                <TabsList className="flex flex-col pt-6 h-full w-full justify-start">
+                  <TabsTrigger
+                    value="attributes"
+                    className="text-zinc-600 dark:text-zinc-200 "
+                  >
+                    Attributes
+                  </TabsTrigger>
+                  <TabsTrigger
+                    value="variations"
+                    className="text-zinc-600 dark:text-zinc-200"
+                  >
+                    Variations
+                  </TabsTrigger>
+                </TabsList>
+              </div>
 
-          <FormField
-            control={form.control}
-            name="image"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormFieldInput label="Image">
-                <Input
-                  {...fieldProps}
-                  placeholder="Picture"
-                  type="file"
-                  accept="image/*, application/pdf"
-                  onChange={(event) =>
-                    onChange(event.target.files && event.target.files[0])
-                  }
-                />
-              </FormFieldInput>
-            )}
-          />
-
-          <FormField
-            control={form.control}
-            name="gallery"
-            render={({ field: { value, onChange, ...fieldProps } }) => (
-              <FormItem>
-                <FormLabel>List Images</FormLabel>
-                <FormControl>
-                  <Input
-                    {...fieldProps}
-                    placeholder="Picture"
-                    type="file"
-                    accept="image/*, application/pdf"
-                    multiple
-                    onChange={(event) =>
-                      onChange(event.target.files && event.target.files)
-                    }
+              <TabsContent value="attributes" className="m-0 w-full">
+                <Card className="border-none shadow-none">
+                  <Controller
+                    name="attribute"
+                    control={control}
+                    rules={{ required: "This field is required" }}
+                    render={({ field }) => (
+                      <SelectField2
+                        label="Attribute"
+                        options={attributes}
+                        value={field.value}
+                        onChange={(newValue) => {
+                          field.onChange(newValue);
+                          handleAttribute(newValue);
+                        }}
+                      />
+                    )}
                   />
-                </FormControl>
-                <FormMessage />
-              </FormItem>
-            )}
-          />
 
-          <FormField
-            control={form.control}
-            name="tags"
-            render={() => (
-              <FormItem>
-                <FormLabel>Tags</FormLabel>
-                {items.map((item) => (
-                  <FormField
-                    key={item.id}
-                    control={form.control}
-                    name="tags"
-                    render={({ field }) => {
-                      return (
-                        <FormItem
-                          key={item.id}
-                          className="flex flex-row items-start space-x-3 space-y-0"
+                  {variation.length > 0 && (
+                    <>
+                      <Separator className="my-4" />
+                      <h4 className=" font-semibold">{variation[0].name}</h4>
+                      <Separator className="my-4" />
+
+                      <Select
+                        options={options ?? []}
+                        onChange={handleChange}
+                        isMulti
+                        value={valueVar}
+                      />
+
+                      <Button
+                        className="w-1/3 mt-4"
+                        type="button"
+                        onClick={() => {
+                          handleAddVariation();
+                          setDisplay(0);
+                        }}
+                      >
+                        Save
+                      </Button>
+                    </>
+                  )}
+                </Card>
+              </TabsContent>
+              <TabsContent value="variations" className="m-0 w-full">
+                {display === 0 && (
+                  <>
+                    <Controller
+                      name="chooseVariation"
+                      control={control}
+                      rules={{ required: "This field is required" }}
+                      render={({ field }) => (
+                        <SelectField2
+                          label="Attribute"
+                          options={[
+                            {
+                              _id: "1",
+                              name: "Create variation",
+                            },
+                          ]}
+                          value={field.value}
+                          onChange={field.onChange}
+                        />
+                      )}
+                    />
+
+                    <Button
+                      className="w-1/3 mt-4"
+                      type="button"
+                      onClick={() => {
+                        if (+control._formValues.chooseVariation === 1) {
+                          setDisplay(+control._formValues.chooseVariation);
+                          completeVariation();
+                        }
+                      }}
+                    >
+                      Add
+                    </Button>
+                  </>
+                )}
+
+                {display === 1 &&
+                  variationArray.map((innerArray, index) => (
+                    <Accordion
+                      key={index}
+                      type="single"
+                      collapsible
+                      className="w-full flex flex-col gap-4"
+                    >
+                      {innerArray.map((item, itemIndex) => (
+                        <AccordionItem
+                          className=""
+                          key={`accordion-item-${index}-${itemIndex}`}
+                          value={`accordion-item-${index}-${itemIndex}`}
                         >
-                          <FormControl>
-                            <Checkbox
-                              checked={field.value?.includes(item.id)}
-                              onCheckedChange={(checked) => {
-                                return checked
-                                  ? field.onChange([...field.value, item.id])
-                                  : field.onChange(
-                                      field.value?.filter(
-                                        (value) => value !== item.id
-                                      )
-                                    );
-                              }}
-                            />
-                          </FormControl>
-                          <FormLabel className="font-normal">
-                            {item.label}
-                          </FormLabel>
-                        </FormItem>
-                      );
-                    }}
-                  />
-                ))}
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                          <div className="flex justify-between items-center mb-5">
+                            <div className="flex gap-3">
+                              {item.map((value, valueIndex) => {
+                                const [options] = attributesStore.filter(
+                                  (attr) => attr._id === value.id_Attribute
+                                );
 
-          <FormField
-            control={form.control}
-            name="description"
-            render={({ field }) => (
-              <FormItem>
-                <FormLabel>Bio</FormLabel>
-                <FormControl>
-                  <Textarea
-                    placeholder="Tell us a little bit about yourself"
-                    className="resize-none"
-                    {...field}
-                  />
-                </FormControl>
+                                return (
+                                  <div
+                                    key={`${index}-${itemIndex}-${valueIndex}`}
+                                  >
+                                    <Controller
+                                      name="chooseVariation"
+                                      control={control}
+                                      rules={{
+                                        required: "This field is required",
+                                      }}
+                                      render={({ field }) => (
+                                        <SelectField2
+                                          label="Attribute"
+                                          options={options.values}
+                                          value={value._id}
+                                          onChange={field.onChange}
+                                        />
+                                      )}
+                                    />
+                                  </div>
+                                );
+                              })}
+                              <AccordionTrigger>TRIGGER</AccordionTrigger>
+                            </div>
 
-                <FormMessage />
-              </FormItem>
-            )}
-          />
+                            <Button
+                              type="button"
+                              onClick={(e) =>
+                                console.log(e.target.parentElement)
+                              }
+                            >
+                              DELETE
+                            </Button>
+                          </div>
+                          <AccordionContent>
+                            <div>
+                              <Label htmlFor="picture">Name</Label>
+                              <Input
+                                className="mt-2"
+                                type="input"
+                                placeholder="Name Product"
+                                {...register(`items[${itemIndex}].quan`, {
+                                  required: true,
+                                })}
+                              />
+                            </div>
+                          </AccordionContent>
+                        </AccordionItem>
+                      ))}
+                    </Accordion>
+                  ))}
+              </TabsContent>
+            </Tabs>
+          </div>
+        </div>
 
-          <Button type="submit">Submit</Button>
-        </form>
-      </Form>
+        <Button className="w-2/3" type="submit">
+          Submit
+        </Button>
+      </form>
     </>
   );
 }

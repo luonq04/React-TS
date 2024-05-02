@@ -10,7 +10,26 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
+
 import { FormField } from "@/components/ui/form";
+
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
+import {
+  Select,
+  SelectContent,
+  SelectGroup,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Label } from "@/components/ui/label";
 
 function SettingPage() {
   const { control, handleSubmit } = useForm();
@@ -44,11 +63,23 @@ function SettingPage() {
           name={`items[${index}].quantity`}
           control={control}
           render={({ field }) => (
-            <Input
-              className="mb-4 ml-1 w-2/3"
-              {...field}
-              placeholder={`quantity ${index + 1}`}
-            />
+            <div>
+              <Label htmlFor="picture">Name</Label>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select a fruit" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectGroup>
+                    <SelectItem value="apple">Apple</SelectItem>
+                    <SelectItem value="banana">Banana</SelectItem>
+                    <SelectItem value="blueberry">Blueberry</SelectItem>
+                    <SelectItem value="grapes">Grapes</SelectItem>
+                    <SelectItem value="pineapple">Pineapple</SelectItem>
+                  </SelectGroup>
+                </SelectContent>
+              </Select>
+            </div>
           )}
         />
         <Controller
@@ -81,7 +112,7 @@ function SettingPage() {
             <AccordionTrigger>Is it accessible?</AccordionTrigger>
             <AccordionContent>
               <FixedSizeList
-                height={numberOfFields * 200} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
+                height={200} // Chiều cao của danh sách phụ thuộc vào số lượng trường input và margin
                 width={500} // Độ rộng của danh sách
                 itemSize={60} // Chiều cao của mỗi mục trong danh sách
                 itemCount={numberOfFields} // Số lượng trường input

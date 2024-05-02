@@ -4,8 +4,6 @@ const AttributeContext = createContext();
 
 let completeVariation;
 
-let newVariationArray;
-
 const renderSelects = (dataArrays, currentIndex = 0, combination = []) => {
   const resultArrays = []; // Biến lưu trữ các mảng kết quả
 
@@ -56,25 +54,17 @@ function reducer(state, action) {
       };
 
     case "DELETE_VARIATION":
-      // console.log("DELETE VARIATION: ", state.variationArray);
-      // // console.log("DELETE VARIATION[0]: ", state.variationArray[0]);
-      // // console.log("PAYLOAD: ", action.payload);
-
-      // newVariationArray = state.variationArray.map((item) => {
-      //   // console.log("ITEM: ", item);
-      //   return item.splice(item.indexOf(action.payload), 1);
-      // });
-
-      const data = state.variationArray.map((item) =>
-        item.filter((i) => i !== action.payload)
-      );
-
-      console.log("VARIATION-ARRAY-BEFORE: ", state.variationArray);
-      console.log("VARIATION-ARRAY-AFTER: ", data);
-
       return {
         ...state,
-        variationArray: data,
+        variationArray: state.variationArray.map((item) =>
+          item.filter((i) => i !== action.payload)
+        ),
+      };
+
+    case "DELETE_ALL_VARIATION":
+      return {
+        ...state,
+        variationArray: [],
       };
 
     default:
@@ -102,6 +92,10 @@ function AttributeProvider({ children }) {
     dispatch({ type: "DELETE_VARIATION", payload: variation });
   }
 
+  function deleteAllVariation() {
+    dispatch({ type: "DELETE_ALL_VARIATION" });
+  }
+
   return (
     <AttributeContext.Provider
       value={{
@@ -112,6 +106,7 @@ function AttributeProvider({ children }) {
         addVariation,
         completeVariation,
         deleteVariation,
+        deleteAllVariation,
       }}
     >
       {children}
